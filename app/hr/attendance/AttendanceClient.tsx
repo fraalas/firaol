@@ -54,14 +54,6 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
     e.preventDefault()
     setSaving(true)
 
-    let workHours: number | null = null
-    if (form.check_in && form.check_out) {
-      const inT  = new Date(eatDateTimeToISO(form.date, form.check_in))
-      const outT = new Date(eatDateTimeToISO(form.date, form.check_out))
-      const diff = (outT.getTime() - inT.getTime()) / (1000 * 60 * 60)
-      workHours = diff > 0 ? Math.round(diff * 100) / 100 : null
-    }
-
     const { data, error } = await supabase.from('attendance').insert({
       company_id:  companyId,
       employee_id: form.employee_id,
@@ -70,7 +62,6 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
       check_out:   form.check_out ? eatDateTimeToISO(form.date, form.check_out) : null,
       status:      form.status,
       notes:       form.notes || null,
-      work_hours:  workHours,
     }).select().single()
 
     if (error) {
