@@ -20,36 +20,37 @@ export const PERMISSIONS: Record<UserRole, {
   properties: boolean
   activities: boolean
   ownLeadsOnly: boolean
+  manageTeam: boolean
 }> = {
   ceo: {
     crm: true, hr: true, finance: true, reports: true,
     settings: true, users: true, admin: true, export: true,
-    properties: true, activities: true, ownLeadsOnly: false,
+    properties: true, activities: true, ownLeadsOnly: false, manageTeam: true,
   },
   general_manager: {
     crm: true, hr: true, finance: true, reports: true,
     settings: true, users: true, admin: true, export: true,
-    properties: true, activities: true, ownLeadsOnly: false,
+    properties: true, activities: true, ownLeadsOnly: false, manageTeam: true,
   },
   sales_manager: {
     crm: true, hr: false, finance: false, reports: true,
     settings: false, users: false, admin: false, export: true,
-    properties: true, activities: true, ownLeadsOnly: false,
+    properties: true, activities: true, ownLeadsOnly: false, manageTeam: true,
   },
   agent: {
     crm: true, hr: false, finance: false, reports: false,
     settings: false, users: false, admin: false, export: false,
-    properties: false, activities: true, ownLeadsOnly: true,
+    properties: false, activities: true, ownLeadsOnly: true, manageTeam: false,
   },
   hr: {
     crm: false, hr: true, finance: false, reports: false,
     settings: false, users: false, admin: false, export: false,
-    properties: false, activities: false, ownLeadsOnly: false,
+    properties: false, activities: false, ownLeadsOnly: false, manageTeam: false,
   },
   staff: {
     crm: false, hr: false, finance: false, reports: false,
     settings: false, users: false, admin: false, export: false,
-    properties: false, activities: false, ownLeadsOnly: false,
+    properties: false, activities: false, ownLeadsOnly: false, manageTeam: false,
   },
 }
 
@@ -83,6 +84,7 @@ export const ALL_NAV_ITEMS = [
       { href: '/properties', label: 'Properties', icon: 'Home',            permission: 'properties' },
       { href: '/reports',    label: 'Reports',    icon: 'BarChart2',       permission: 'reports'    },
       { href: '/export',     label: 'Export',     icon: 'Download',        permission: 'export'     },
+      { href: '/sales/team', label: 'My Team',    icon: 'UserCheck',       permission: 'manageTeam' },
     ]
   },
   {

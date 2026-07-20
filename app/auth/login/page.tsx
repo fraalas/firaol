@@ -87,10 +87,6 @@ export default function LoginPage() {
             {loading && <Loader2 size={16} className="animate-spin"/>}
             {loading ? 'Logging in...' : 'Login'}
           </button>
-          <p className="text-center text-sm text-[#4A5880]">
-            Don't have an account?{' '}
-            <Link href="/auth/signup" className="text-[#1F4FA8] font-bold">Sign up</Link>
-          </p>
         </form>
         <div className="h-32 bg-gradient-to-br from-[#E8F0FA] to-[#C8D9F0] flex items-center justify-center">
           <svg width="140" height="90" viewBox="0 0 160 100" fill="none" opacity="0.3">

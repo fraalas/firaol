@@ -47,15 +47,12 @@ export function LeaveClient({
     if (!employee) return
     setSaving(true)
 
-    const days = form.start_date && form.end_date ? daysBetween(form.start_date, form.end_date) : null
-
     const { data, error } = await supabase.from('leave_requests').insert({
       company_id:  companyId,
       employee_id: employee.id,
       leave_type:  form.leave_type,
       start_date:  form.start_date,
       end_date:    form.end_date,
-      days,
       reason:      form.reason || null,
       status:      'pending',
     }).select().single()
