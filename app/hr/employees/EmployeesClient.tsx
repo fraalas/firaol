@@ -110,7 +110,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
     const json = await res.json()
 
     if (!res.ok) {
-      alert('Error: ' + json.error)
+      alert('Error: ' + JSON.stringify(json))
       setCreating(false)
       return
     }
