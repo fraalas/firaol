@@ -1,7 +1,10 @@
 'use client'
-import { useState } from 'react'
-import { Search, Plus, Loader2, X, KeyRound, Copy, Check } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Search, Plus, Loader2, X, KeyRound, Copy, Check, Upload, FileSpreadsheet, FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import * as XLSX from 'xlsx'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const DEPARTMENTS = ['Sales', 'Marketing', 'Finance', 'Operations', 'HR', 'Management']
 
@@ -25,6 +28,18 @@ const STATUS_BADGE: Record<string, { bg: string; text: string; label: string }> 
   active:     { bg: '#F0FDF4', text: '#166534', label: 'Active' },
   inactive:   { bg: '#FFFBEB', text: '#92400E', label: 'Inactive' },
   terminated: { bg: '#FEF2F2', text: '#991B1B', label: 'Terminated' },
+}
+
+// Maps flexible spreadsheet header names -> our actual DB columns
+const IMPORT_FIELD_ALIASES: Record<string, string> = {
+  'full name': 'full_name', 'name': 'full_name', 'employee name': 'full_name',
+  'email': 'email', 'e-mail': 'email',
+  'phone': 'phone', 'phone number': 'phone', 'mobile': 'phone',
+  'department': 'department', 'dept': 'department',
+  'job title': 'job_title', 'title': 'job_title', 'position': 'job_title',
+  'salary': 'salary', 'monthly salary': 'salary',
+  'hire date': 'hire_date', 'start date': 'hire_date', 'date hired': 'hire_date',
+  'status': 'status',
 }
 
 function initials(name: string) {
@@ -52,6 +67,11 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
   const [creating,    setCreating]    = useState(false)
   const [result,      setResult]      = useState<{ email: string; tempPassword: string } | null>(null)
   const [copied,      setCopied]      = useState(false)
+
+  // Import state
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [importing, setImporting] = useState(false)
+  const [importSummary, setImportSummary] = useState<{ added: number; skipped: number; errors: string[] } | null>(null)
 
   const filtered = employees.filter(e => {
     const matchStatus = filter === 'all' || e.status === filter
@@ -127,6 +147,141 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
     setCopied(false)
   }
 
+  // ── Import from Excel ──────────────────────────────────────────────────────
+
+  function normalizeHeader(h: string) {
+    return h.trim().toLowerCase()
+  }
+
+  async function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImporting(true)
+    setImportSummary(null)
+
+    try {
+      const buf = await file.arrayBuffer()
+      const wb = XLSX.read(buf, { type: 'array', cellDates: true })
+      const sheet = wb.Sheets[wb.SheetNames[0]]
+      const rows: Record<string, any>[] = XLSX.utils.sheet_to_json(sheet, { defval: '' })
+
+      const toInsert: any[] = []
+      const errors: string[] = []
+
+      rows.forEach((row, idx) => {
+        const mapped: Record<string, any> = {}
+        for (const key of Object.keys(row)) {
+          const normalized = normalizeHeader(key)
+          const field = IMPORT_FIELD_ALIASES[normalized]
+          if (field) mapped[field] = row[key]
+        }
+
+        if (!mapped.full_name || !mapped.email) {
+          errors.push(`Row ${idx + 2}: missing Full Name or Email — skipped`)
+          return
+        }
+
+        let hireDate: string | null = null
+        if (mapped.hire_date) {
+          const d = mapped.hire_date instanceof Date ? mapped.hire_date : new Date(mapped.hire_date)
+          if (!isNaN(d.getTime())) hireDate = d.toISOString().slice(0, 10)
+        }
+
+        toInsert.push({
+          full_name:  String(mapped.full_name).trim(),
+          email:      String(mapped.email).trim(),
+          phone:      mapped.phone ? String(mapped.phone).trim() : null,
+          department: mapped.department ? String(mapped.department).trim() : DEPARTMENTS[0],
+          job_title:  mapped.job_title ? String(mapped.job_title).trim() : null,
+          salary:     mapped.salary ? parseFloat(mapped.salary) : 0,
+          hire_date:  hireDate,
+          status:     mapped.status ? String(mapped.status).trim().toLowerCase() : 'active',
+          company_id: companyId,
+        })
+      })
+
+      if (toInsert.length === 0) {
+        setImportSummary({ added: 0, skipped: rows.length, errors: errors.length ? errors : ['No valid rows found. Check your column headers match: Full Name, Email, Phone, Department, Job Title, Salary, Hire Date, Status.'] })
+        setImporting(false)
+        if (fileInputRef.current) fileInputRef.current.value = ''
+        return
+      }
+
+      const { data, error } = await supabase.from('employees').insert(toInsert).select()
+
+      if (error) {
+        setImportSummary({ added: 0, skipped: rows.length, errors: [error.message] })
+      } else {
+        setEmployees(prev => [...(data ?? []), ...prev])
+        setImportSummary({ added: data?.length ?? 0, skipped: errors.length, errors })
+      }
+    } catch (err: any) {
+      setImportSummary({ added: 0, skipped: 0, errors: ['Could not read file: ' + err.message] })
+    }
+
+    setImporting(false)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  // ── Export to Excel ────────────────────────────────────────────────────────
+
+  function handleExportExcel() {
+    const rows = filtered.map(e => ({
+      'Full Name':  e.full_name,
+      'Email':      e.email ?? '',
+      'Phone':      e.phone ?? '',
+      'Department': e.department ?? '',
+      'Job Title':  e.job_title ?? '',
+      'Salary':     e.salary ?? 0,
+      'Hire Date':  e.hire_date ?? '',
+      'Status':     e.status ?? '',
+    }))
+    const ws = XLSX.utils.json_to_sheet(rows)
+    ws['!cols'] = [
+      { wch: 22 }, { wch: 26 }, { wch: 16 }, { wch: 14 },
+      { wch: 20 }, { wch: 12 }, { wch: 14 }, { wch: 12 },
+    ]
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Employees')
+    const dateStr = new Date().toISOString().slice(0, 10)
+    XLSX.writeFile(wb, `Sanchos_Employees_${dateStr}.xlsx`)
+  }
+
+  // ── Export to PDF ──────────────────────────────────────────────────────────
+
+  function handleExportPDF() {
+    const doc = new jsPDF({ orientation: 'landscape' })
+    const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+
+    doc.setFontSize(16)
+    doc.setTextColor(26, 58, 107) // #1A3A6B
+    doc.text('Sanchos Real Estate — Employee Report', 14, 16)
+    doc.setFontSize(10)
+    doc.setTextColor(120, 120, 120)
+    doc.text(`Generated ${dateStr}  ·  ${filtered.length} employees`, 14, 22)
+
+    autoTable(doc, {
+      startY: 28,
+      head: [['Full Name', 'Email', 'Phone', 'Department', 'Job Title', 'Salary', 'Hire Date', 'Status']],
+      body: filtered.map(e => [
+        e.full_name,
+        e.email ?? '',
+        e.phone ?? '',
+        e.department ?? '',
+        e.job_title ?? '',
+        e.salary ? `$${Number(e.salary).toLocaleString()}` : '$0',
+        e.hire_date ?? '',
+        e.status ?? '',
+      ]),
+      headStyles: { fillColor: [26, 58, 107], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [247, 249, 253] },
+      styles: { fontSize: 9, cellPadding: 3 },
+    })
+
+    const dateFile = new Date().toISOString().slice(0, 10)
+    doc.save(`Sanchos_Employees_${dateFile}.pdf`)
+  }
+
   return (
     <>
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
@@ -141,6 +296,44 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
             <Plus size={16}/> Add
           </button>
         </div>
+
+        {/* Import / Export toolbar */}
+        <div className="flex gap-2 mb-3">
+          <input ref={fileInputRef} type="file" accept=".xlsx,.xls" className="hidden" onChange={handleImportFile} />
+          <button onClick={() => fileInputRef.current?.click()} disabled={importing}
+            className="flex-1 bg-white border border-[#E2E8F4] rounded-xl px-2 py-2 text-xs font-semibold text-[#4A5880] flex items-center justify-center gap-1.5 disabled:opacity-60">
+            {importing ? <Loader2 size={14} className="animate-spin"/> : <Upload size={14}/>}
+            Import
+          </button>
+          <button onClick={handleExportExcel}
+            className="flex-1 bg-white border border-[#E2E8F4] rounded-xl px-2 py-2 text-xs font-semibold text-[#4A5880] flex items-center justify-center gap-1.5">
+            <FileSpreadsheet size={14}/> Excel
+          </button>
+          <button onClick={handleExportPDF}
+            className="flex-1 bg-white border border-[#E2E8F4] rounded-xl px-2 py-2 text-xs font-semibold text-[#4A5880] flex items-center justify-center gap-1.5">
+            <FileText size={14}/> PDF
+          </button>
+        </div>
+
+        {importSummary && (
+          <div className={`mb-3 rounded-xl border px-3 py-2.5 text-xs ${
+            importSummary.added > 0 ? 'border-[#BBF7D0] bg-[#F0FDF4] text-[#166534]' : 'border-[#FECACA] bg-[#FEF2F2] text-[#991B1B]'
+          }`}>
+            <div className="flex items-center justify-between">
+              <span className="font-semibold">
+                {importSummary.added > 0 ? `Imported ${importSummary.added} employee(s).` : 'Import failed.'}
+                {importSummary.skipped > 0 && ` ${importSummary.skipped} row(s) skipped.`}
+              </span>
+              <button onClick={() => setImportSummary(null)} className="ml-2"><X size={13}/></button>
+            </div>
+            {importSummary.errors.length > 0 && (
+              <ul className="mt-1.5 space-y-0.5 opacity-80">
+                {importSummary.errors.slice(0, 5).map((err, i) => <li key={i}>• {err}</li>)}
+                {importSummary.errors.length > 5 && <li>…and {importSummary.errors.length - 5} more</li>}
+              </ul>
+            )}
+          </div>
+        )}
 
         <div className="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar">
           {STATUS_FILTERS.map(s => (
