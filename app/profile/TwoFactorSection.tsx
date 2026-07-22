@@ -27,7 +27,7 @@ export function TwoFactorSection() {
   async function startEnroll() {
     setError('')
     const { data: existing } = await supabase.auth.mfa.listFactors()
-    const stale = existing?.totp.find(f => f.status === 'unverified')
+   const stale = existing?.totp.find(f => (f.status as string) === 'unverified')
     if (stale) await supabase.auth.mfa.unenroll({ factorId: stale.id })
 
     const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' })
