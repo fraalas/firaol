@@ -131,7 +131,7 @@ export function AppLayout({ children, title, subtitle }: Props) {
             </h1>
             {subtitle && <p className="text-sm text-[#9AAAC8]">{subtitle}</p>}
           </div>
-          {flatItems.some(n => n.href === '/leads') && (
+          {isActive('/leads') && (
             <button onClick={() => router.push('/leads')}
               className="bg-[#1A3A6B] text-white font-bold px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 hover:bg-[#1F4FA8] transition-colors">
               <Plus size={16}/> Add Lead
