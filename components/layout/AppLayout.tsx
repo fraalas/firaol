@@ -4,7 +4,8 @@ import {
   LayoutDashboard, Users, Plus, CalendarDays, User,
   Home, BarChart2, Download, ShieldCheck, LogOut,
   UserCheck, Clock, CalendarOff, Wallet,
-  TrendingUp, TrendingDown, BadgeDollarSign, Settings
+  TrendingUp, TrendingDown, BadgeDollarSign, Settings,
+  ChevronDown
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { SanchosLogoSmall } from '@/components/ui/SanchosLogo'
@@ -34,6 +35,7 @@ export function AppLayout({ children, title, subtitle }: Props) {
   const supabase = createClient()
   const [role,    setRole]    = useState<string>('agent')
   const [profile, setProfile] = useState<any>(null)
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     async function loadRole() {
@@ -92,30 +94,38 @@ export function AppLayout({ children, title, subtitle }: Props) {
 
         {/* Nav links */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {navGroups.map(group => (
-            <div key={group.group} className="mb-1">
-              {GROUP_LABELS[group.group] && (
-                <div className="px-4 pt-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-white/30">
-                  {GROUP_LABELS[group.group]}
-                </div>
-              )}
-              {group.items.map(item => {
-                const Icon   = ICON_MAP[item.icon] ?? LayoutDashboard
-                const active = isActive(item.href)
-                return (
-                  <button key={item.href} onClick={() => router.push(item.href)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-left ${
-                      active
-                        ? 'bg-white/15 text-white border-l-4 border-[#4BAEE8]'
-                        : 'text-white/60 hover:bg-white/10 hover:text-white border-l-4 border-transparent'
-                    }`}>
-                    <Icon size={18} strokeWidth={active ? 2.2 : 1.8}/>
-                    {item.label}
+          {navGroups.map(group => {
+            const label = GROUP_LABELS[group.group]
+            const isCollapsed = collapsed[group.group]
+            return (
+              <div key={group.group} className="mb-1">
+                {label && (
+                  <button
+                    onClick={() => setCollapsed(prev => ({ ...prev, [group.group]: !prev[group.group] }))}
+                    className="w-full flex items-center justify-between px-4 pt-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-white/30 hover:text-white/50 transition-colors"
+                  >
+                    <span>{label}</span>
+                    <ChevronDown size={12} className={`transition-transform ${isCollapsed ? '-rotate-90' : ''}`} />
                   </button>
-                )
-              })}
-            </div>
-          ))}
+                )}
+                {!isCollapsed && group.items.map(item => {
+                  const Icon   = ICON_MAP[item.icon] ?? LayoutDashboard
+                  const active = isActive(item.href)
+                  return (
+                    <button key={item.href} onClick={() => router.push(item.href)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-left ${
+                        active
+                          ? 'bg-white/15 text-white border-l-4 border-[#4BAEE8]'
+                          : 'text-white/60 hover:bg-white/10 hover:text-white border-l-4 border-transparent'
+                      }`}>
+                      <Icon size={18} strokeWidth={active ? 2.2 : 1.8}/>
+                      {item.label}
+                    </button>
+                  )
+                })}
+              </div>
+            )
+          })}
         </nav>
 
         {/* Logout */}
