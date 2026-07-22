@@ -33,6 +33,7 @@ export default function LeadDetailPage() {
 
   const [lead,       setLead]       = useState<any>(null)
   const [activities, setActivities] = useState<any[]>([])
+  const [agentProfile, setAgentProfile] = useState<any>(null)
   const [loading,    setLoading]    = useState(true)
   const [editing,    setEditing]    = useState(false)
   const [saving,     setSaving]     = useState(false)
@@ -64,6 +65,12 @@ export default function LeadDetailPage() {
         source:    leadData.source ?? 'referral',
         notes:     leadData.notes ?? '',
       })
+
+      if (leadData.agent_id) {
+        const { data: agentData } = await supabase
+          .from('profiles').select('full_name, phone, role, avatar_url').eq('id', leadData.agent_id).single()
+        setAgentProfile(agentData)
+      }
 
       const { data: actsData } = await supabase
         .from('activities').select('*').eq('lead_id', id)
@@ -261,6 +268,24 @@ export default function LeadDetailPage() {
                 <div className="text-sm text-[#0D1B3E] capitalize">{(lead.source ?? 'other').replace('_',' ')}</div>
               )}
             </div>
+
+            {/* Assigned agent */}
+            {agentProfile && (
+              <div className="bg-white rounded-2xl border border-[#E2E8F4] px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-[#F5F7FB] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    {agentProfile.avatar_url
+                      ? <img src={agentProfile.avatar_url} alt="" className="w-full h-full object-cover" />
+                      : <User size={15} className="text-[#9AAAC8]" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[10px] text-[#9AAAC8] uppercase font-semibold tracking-wider">Assigned Agent</div>
+                    <div className="text-sm text-[#0D1B3E] font-medium truncate">{agentProfile.full_name}</div>
+                    <div className="text-xs text-[#9AAAC8] capitalize">{agentProfile.role?.replace('_', ' ')}</div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="bg-white rounded-2xl border border-[#E2E8F4] px-4 py-3 flex items-center gap-2 text-xs text-[#9AAAC8]">
               <Clock size={13}/> Created {new Date(lead.created_at).toLocaleDateString()}

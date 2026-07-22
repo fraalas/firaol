@@ -455,9 +455,11 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
               <div key={emp.id}
                 className="w-full bg-white rounded-2xl border border-[#E2E8F4] px-4 py-3 flex items-center gap-3">
                 <button onClick={() => openEdit(emp)} className="flex items-center gap-3 flex-1 min-w-0 text-left">
-                  <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 overflow-hidden"
                     style={{ background: BG[ci], color: TC[ci] }}>
-                    {initials(emp.full_name)}
+                    {emp.profiles?.avatar_url
+                      ? <img src={emp.profiles.avatar_url} alt="" className="w-full h-full object-cover" />
+                      : initials(emp.full_name)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-semibold text-[#0D1B3E] truncate">{emp.full_name}</div>

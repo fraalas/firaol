@@ -40,7 +40,7 @@ export function AppLayout({ children, title, subtitle }: Props) {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
       const { data } = await supabase
-        .from('profiles').select('role, full_name').eq('id', user.id).single()
+        .from('profiles').select('role, full_name, avatar_url').eq('id', user.id).single()
       if (data) { setRole(data.role); setProfile(data) }
     }
     loadRole()
@@ -74,12 +74,19 @@ export function AppLayout({ children, title, subtitle }: Props) {
 
         {/* Profile info */}
         {profile && (
-          <div className="px-4 py-3 border-b border-white/10">
-            <div className="text-white text-sm font-semibold truncate">{profile.full_name}</div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 inline-block"
-              style={{ background: rb.bg, color: rb.color }}>
-              {ROLE_LABELS[role] ?? role}
-            </span>
+          <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-full bg-[#2E5FA8] border-2 border-white/20 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 overflow-hidden">
+              {profile.avatar_url
+                ? <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+                : profile.full_name?.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <div className="text-white text-sm font-semibold truncate">{profile.full_name}</div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 inline-block"
+                style={{ background: rb.bg, color: rb.color }}>
+                {ROLE_LABELS[role] ?? role}
+              </span>
+            </div>
           </div>
         )}
 

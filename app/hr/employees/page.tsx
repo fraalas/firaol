@@ -23,7 +23,7 @@ export default function EmployeesPage() {
 
       const { data } = await supabase
         .from('employees')
-        .select('*')
+        .select('*, profiles:profile_id(avatar_url)')
         .eq('company_id', profile?.company_id)
         .order('created_at', { ascending: false })
       setEmployees(data ?? [])
