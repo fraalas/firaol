@@ -410,7 +410,7 @@ export function LeadDetailClient({ lead: initialLead, activities: initialActs, a
                 <div className="flex-1">
                   <div className="text-[10px] font-semibold text-[#9AAAC8] uppercase tracking-wider mb-0.5">Lead Source</div>
                   {editing ? (
-                    <select value={form.source} onChange={e => setForm(p => ({ ...p, source: e.target.value }))}
+                    <select value={form.source} onChange={e => setForm(p => ({ ...p, source: e.target.value as LeadSource }))}
                       className="text-sm text-[#0D1B3E] border-b-2 border-[#1A3A6B] outline-none bg-transparent w-full">
                       {SOURCES.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
                     </select>
