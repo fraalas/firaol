@@ -10,6 +10,7 @@ export default function PropertiesPage() {
   const router   = useRouter()
   const [properties, setProperties] = useState<any[]>([])
   const [agentId,    setAgentId]    = useState('')
+  const [userRole,   setUserRole]   = useState('')
   const [loading,    setLoading]    = useState(true)
 
   useEffect(() => {
@@ -17,6 +18,13 @@ export default function PropertiesPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.replace('/auth/login'); return }
       setAgentId(user.id)
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      setUserRole(profile?.role ?? 'agent')
 
       const { data } = await supabase
         .from('properties')
@@ -36,7 +44,7 @@ export default function PropertiesPage() {
 
   return (
     <AppLayout title="Properties" subtitle={`${properties.length} listings`}>
-      <PropertiesClient properties={properties} agentId={agentId} />
+      <PropertiesClient properties={properties} agentId={agentId} userRole={userRole} />
     </AppLayout>
   )
 }
