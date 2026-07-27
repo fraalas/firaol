@@ -53,6 +53,18 @@ export default function LoginPage() {
 
       {/* Left branding panel — desktop only */}
       <div className="hidden md:flex relative overflow-hidden bg-[#1A3A6B] flex-col items-center justify-center px-12 py-16">
+
+        {/* Geometric pattern texture — subtle, behind everything */}
+        <div
+          className="absolute inset-0 z-0 pointer-events-none opacity-[0.08]"
+          style={{
+            backgroundImage: "url('/pattern.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+
         {/* Floating background shapes — behind everything, never overlapping text */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <div className="absolute w-80 h-80 rounded-full bg-white/5 -top-20 -right-20 animate-float-slow"/>
@@ -68,7 +80,7 @@ export default function LoginPage() {
           </h2>
           <p className="text-white/60 text-base mt-4 text-center max-w-sm animate-fade-in-up"
             style={{ animationDelay: '240ms' }}>
-            Manage leads, properties, attendance, and your team — all from one place.
+            Manage leads properties attendance and your team — all from one place.
           </p>
         </div>
       </div>

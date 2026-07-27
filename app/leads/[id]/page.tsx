@@ -107,9 +107,16 @@ export default function LeadDetailPage() {
     e.preventDefault()
     setActSaving(true)
     const { data: { user } } = await supabase.auth.getUser()
-    const { data } = await supabase.from('activities').insert({
+    const { data, error } = await supabase.from('activities').insert({
       ...actForm, agent_id: user?.id, lead_id: id, completed: false
     }).select().single()
+
+    if (error) {
+      alert('Error scheduling activity: ' + error.message)
+      setActSaving(false)
+      return
+    }
+
     if (data) {
       setActivities(prev => [data, ...prev])
       setShowAct(false)
