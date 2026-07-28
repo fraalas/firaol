@@ -46,6 +46,7 @@ export default function LeadDetailPage() {
   const [actForm,    setActForm]    = useState({ title: '', type: 'call', scheduled_at: '', notes: '' })
   const [actSaving,  setActSaving]  = useState(false)
   const [actError,   setActError]   = useState('')
+  const [debugInfo,  setDebugInfo]  = useState('')
 
   useEffect(() => {
     async function load() {
@@ -106,19 +107,25 @@ export default function LeadDetailPage() {
 
   async function handleAddActivity(e: React.FormEvent) {
     e.preventDefault()
+    setDebugInfo('Button clicked, handler started at ' + new Date().toLocaleTimeString())
     setActSaving(true)
     setActError('')
 
     try {
+      setDebugInfo(prev => prev + ' | Checking session...')
       const { data: userData, error: userError } = await supabase.auth.getUser()
 
       if (userError || !userData?.user) {
+        setDebugInfo(prev => prev + ' | FAILED at session check')
         setActError('Could not verify your login session. Try refreshing the page and logging in again. (' + (userError?.message || 'no user found') + ')')
         setActSaving(false)
         return
       }
 
+      setDebugInfo(prev => prev + ' | Session OK, user: ' + userData.user.id.slice(0, 8) + '...')
+
       if (!actForm.title || !actForm.scheduled_at) {
+        setDebugInfo(prev => prev + ' | FAILED validation: missing title or date')
         setActError('Title and Date & Time are required.')
         setActSaving(false)
         return
@@ -134,10 +141,12 @@ export default function LeadDetailPage() {
         completed: false,
       }
 
+      setDebugInfo(prev => prev + ' | Sending insert...')
       const { data, error } = await supabase.from('activities').insert(payload).select().single()
+      setDebugInfo(prev => prev + ' | Insert response received. Error: ' + (error ? error.message : 'none') + ' | Data: ' + (data ? 'received' : 'null'))
 
       if (error) {
-        setActError('Database error: ' + error.message + (error.hint ? ' — ' + error.hint : ''))
+        setActError('Database error: ' + error.message + (error.hint ? ' — ' + error.hint : '') + (error.code ? ' (code: ' + error.code + ')' : ''))
         setActSaving(false)
         return
       }
@@ -148,11 +157,13 @@ export default function LeadDetailPage() {
         return
       }
 
+      setDebugInfo(prev => prev + ' | SUCCESS, closing form.')
       setActivities(prev => [data, ...prev])
       setShowAct(false)
       setActForm({ title: '', type: 'call', scheduled_at: '', notes: '' })
       setActError('')
     } catch (err: any) {
+      setDebugInfo(prev => prev + ' | CRASHED: ' + (err?.message || String(err)))
       setActError('Unexpected error: ' + (err?.message || String(err)))
     }
 
@@ -438,6 +449,11 @@ export default function LeadDetailPage() {
             {actError && (
               <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 mb-3">
                 {actError}
+              </div>
+            )}
+            {debugInfo && (
+              <div className="bg-blue-50 border border-blue-200 rounded-xl px-3 py-2 text-[11px] text-blue-700 mb-3 font-mono break-words">
+                {debugInfo}
               </div>
             )}
             <form onSubmit={handleAddActivity} className="space-y-3">
