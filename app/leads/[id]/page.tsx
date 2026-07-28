@@ -126,6 +126,18 @@ export default function LeadDetailPage() {
         return
       }
 
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', userData.user.id)
+        .single()
+
+      if (profileError || !profileData?.company_id) {
+        setActError('Could not determine your company. ' + (profileError?.message || 'Profile has no company_id.'))
+        setActSaving(false)
+        return
+      }
+
       const payload = {
         title: actForm.title,
         type: actForm.type,
@@ -134,6 +146,7 @@ export default function LeadDetailPage() {
         agent_id: userData.user.id,
         lead_id: id,
         completed: false,
+        company_id: profileData.company_id,
       }
 
       // Insert WITHOUT trying to read the row back immediately —
