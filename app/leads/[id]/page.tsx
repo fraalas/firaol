@@ -45,6 +45,7 @@ export default function LeadDetailPage() {
   const [form,       setForm]       = useState<any>({})
   const [actForm,    setActForm]    = useState({ title: '', type: 'call', scheduled_at: '', notes: '' })
   const [actSaving,  setActSaving]  = useState(false)
+  const [actError,   setActError]   = useState('')
 
   useEffect(() => {
     async function load() {
@@ -106,22 +107,55 @@ export default function LeadDetailPage() {
   async function handleAddActivity(e: React.FormEvent) {
     e.preventDefault()
     setActSaving(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    const { data, error } = await supabase.from('activities').insert({
-      ...actForm, agent_id: user?.id, lead_id: id, completed: false
-    }).select().single()
+    setActError('')
 
-    if (error) {
-      alert('Error scheduling activity: ' + error.message)
-      setActSaving(false)
-      return
-    }
+    try {
+      const { data: userData, error: userError } = await supabase.auth.getUser()
 
-    if (data) {
+      if (userError || !userData?.user) {
+        setActError('Could not verify your login session. Try refreshing the page and logging in again. (' + (userError?.message || 'no user found') + ')')
+        setActSaving(false)
+        return
+      }
+
+      if (!actForm.title || !actForm.scheduled_at) {
+        setActError('Title and Date & Time are required.')
+        setActSaving(false)
+        return
+      }
+
+      const payload = {
+        title: actForm.title,
+        type: actForm.type,
+        scheduled_at: actForm.scheduled_at,
+        notes: actForm.notes || null,
+        agent_id: userData.user.id,
+        lead_id: id,
+        completed: false,
+      }
+
+      const { data, error } = await supabase.from('activities').insert(payload).select().single()
+
+      if (error) {
+        setActError('Database error: ' + error.message + (error.hint ? ' — ' + error.hint : ''))
+        setActSaving(false)
+        return
+      }
+
+      if (!data) {
+        setActError('The activity may have saved, but could not be read back. This usually means a permissions (RLS) issue on the activities table.')
+        setActSaving(false)
+        return
+      }
+
       setActivities(prev => [data, ...prev])
       setShowAct(false)
       setActForm({ title: '', type: 'call', scheduled_at: '', notes: '' })
+      setActError('')
+    } catch (err: any) {
+      setActError('Unexpected error: ' + (err?.message || String(err)))
     }
+
     setActSaving(false)
   }
 
@@ -399,8 +433,13 @@ export default function LeadDetailPage() {
           <div className="bg-white w-full md:w-96 rounded-t-3xl md:rounded-2xl p-6 pb-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-[#0D1B3E]">Add Activity</h3>
-              <button onClick={() => setShowAct(false)} className="text-[#9AAAC8]"><X size={20}/></button>
+              <button onClick={() => { setShowAct(false); setActError('') }} className="text-[#9AAAC8]"><X size={20}/></button>
             </div>
+            {actError && (
+              <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 mb-3">
+                {actError}
+              </div>
+            )}
             <form onSubmit={handleAddActivity} className="space-y-3">
               <div>
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Title *</label>
