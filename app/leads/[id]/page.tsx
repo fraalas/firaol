@@ -107,25 +107,20 @@ export default function LeadDetailPage() {
 
   async function handleAddActivity(e: React.FormEvent) {
     e.preventDefault()
-    setDebugInfo('Button clicked, handler started at ' + new Date().toLocaleTimeString())
+    setDebugInfo('Started at ' + new Date().toLocaleTimeString())
     setActSaving(true)
     setActError('')
 
     try {
-      setDebugInfo(prev => prev + ' | Checking session...')
       const { data: userData, error: userError } = await supabase.auth.getUser()
 
       if (userError || !userData?.user) {
-        setDebugInfo(prev => prev + ' | FAILED at session check')
-        setActError('Could not verify your login session. Try refreshing the page and logging in again. (' + (userError?.message || 'no user found') + ')')
+        setActError('Session error: ' + (userError?.message || 'no user found') + '. Try logging in again.')
         setActSaving(false)
         return
       }
 
-      setDebugInfo(prev => prev + ' | Session OK, user: ' + userData.user.id.slice(0, 8) + '...')
-
       if (!actForm.title || !actForm.scheduled_at) {
-        setDebugInfo(prev => prev + ' | FAILED validation: missing title or date')
         setActError('Title and Date & Time are required.')
         setActSaving(false)
         return
@@ -141,29 +136,36 @@ export default function LeadDetailPage() {
         completed: false,
       }
 
-      setDebugInfo(prev => prev + ' | Sending insert...')
-      const { data, error } = await supabase.from('activities').insert(payload).select().single()
-      setDebugInfo(prev => prev + ' | Insert response received. Error: ' + (error ? error.message : 'none') + ' | Data: ' + (data ? 'received' : 'null'))
+      // Insert WITHOUT trying to read the row back immediately —
+      // avoids failures caused by RLS blocking the read-after-write.
+      const { error: insertError } = await supabase.from('activities').insert(payload)
 
-      if (error) {
-        setActError('Database error: ' + error.message + (error.hint ? ' — ' + error.hint : '') + (error.code ? ' (code: ' + error.code + ')' : ''))
+      if (insertError) {
+        setActError('Could not save: ' + insertError.message + (insertError.code ? ' (code ' + insertError.code + ')' : ''))
         setActSaving(false)
         return
       }
 
-      if (!data) {
-        setActError('The activity may have saved, but could not be read back. This usually means a permissions (RLS) issue on the activities table.')
+      // Re-fetch the full activity list fresh from the database instead
+      // of relying on the insert's return value.
+      const { data: freshActivities, error: fetchError } = await supabase
+        .from('activities')
+        .select('*')
+        .eq('lead_id', id)
+        .order('scheduled_at', { ascending: false })
+
+      if (fetchError) {
+        setActError('Saved, but could not refresh the list: ' + fetchError.message + '. Try closing and reopening this lead.')
         setActSaving(false)
         return
       }
 
-      setDebugInfo(prev => prev + ' | SUCCESS, closing form.')
-      setActivities(prev => [data, ...prev])
+      setActivities(freshActivities ?? [])
       setShowAct(false)
       setActForm({ title: '', type: 'call', scheduled_at: '', notes: '' })
       setActError('')
+      setDebugInfo('')
     } catch (err: any) {
-      setDebugInfo(prev => prev + ' | CRASHED: ' + (err?.message || String(err)))
       setActError('Unexpected error: ' + (err?.message || String(err)))
     }
 
