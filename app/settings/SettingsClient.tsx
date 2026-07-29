@@ -68,7 +68,7 @@ export function SettingsClient({ company }: Props) {
       <div className="bg-white rounded-2xl border border-[#E2E8F4] p-5">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-[#F0F4FB] flex items-center justify-center">
-            <Building2 size={15} className="text-[#1A3A6B]" />
+            <Building2 size={15} className="text-[#075290]" />
           </div>
           <h3 className="font-bold text-[#0D1B3E] text-sm">Company Profile</h3>
         </div>
@@ -80,7 +80,7 @@ export function SettingsClient({ company }: Props) {
               value={form.name}
               onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
               required
-              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
             />
           </div>
           <div>
@@ -89,7 +89,7 @@ export function SettingsClient({ company }: Props) {
               type="tel"
               value={form.phone}
               onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
             />
           </div>
           <div>
@@ -98,7 +98,7 @@ export function SettingsClient({ company }: Props) {
               value={form.address}
               onChange={e => setForm(p => ({ ...p, address: e.target.value }))}
               placeholder="e.g. Bole, Addis Ababa"
-              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
             />
           </div>
           <div>
@@ -107,7 +107,7 @@ export function SettingsClient({ company }: Props) {
               value={form.logo_url}
               onChange={e => setForm(p => ({ ...p, logo_url: e.target.value }))}
               placeholder="https://..."
-              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
             />
           </div>
 
@@ -116,7 +116,7 @@ export function SettingsClient({ company }: Props) {
           )}
 
           <button type="submit" disabled={saving}
-            className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
             {saving ? <Loader2 size={16} className="animate-spin"/> : saved ? <Check size={16}/> : null}
             {saved ? 'Saved!' : 'Save Company Info'}
           </button>
@@ -127,7 +127,7 @@ export function SettingsClient({ company }: Props) {
       <div className="bg-white rounded-2xl border border-[#E2E8F4] p-5">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-[#F0F4FB] flex items-center justify-center">
-            <Globe size={15} className="text-[#1A3A6B]" />
+            <Globe size={15} className="text-[#075290]" />
           </div>
           <h3 className="font-bold text-[#0D1B3E] text-sm">System Preferences</h3>
         </div>
@@ -140,7 +140,7 @@ export function SettingsClient({ company }: Props) {
                 <button key={c} type="button" onClick={() => handleCurrencyChange(c)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
                     currency === c
-                      ? 'border-[#1A3A6B] bg-[#1A3A6B] text-white'
+                      ? 'border-[#075290] bg-[#075290] text-white'
                       : 'border-[#E2E8F4] text-[#4A5880]'
                   }`}>
                   {c}
@@ -157,7 +157,7 @@ export function SettingsClient({ company }: Props) {
                 <button key={l.key} type="button" onClick={() => handleLanguageChange(l.key)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
                     language === l.key
-                      ? 'border-[#1A3A6B] bg-[#1A3A6B] text-white'
+                      ? 'border-[#075290] bg-[#075290] text-white'
                       : 'border-[#E2E8F4] text-[#4A5880]'
                   }`}>
                   {l.label}

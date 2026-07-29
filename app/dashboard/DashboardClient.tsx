@@ -70,13 +70,13 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
             <p className="text-xs text-[#9AAAC8]">Here's what's happening today.</p>
           </div>
           <button onClick={handleRefresh} disabled={refreshing}
-            className="p-2 rounded-xl border border-[#E2E8F4] text-[#9AAAC8] hover:text-[#1A3A6B] hover:border-[#1A3A6B] transition-colors">
+            className="p-2 rounded-xl border border-[#E2E8F4] text-[#9AAAC8] hover:text-[#075290] hover:border-[#075290] transition-colors">
             <RefreshCw size={15} className={refreshing ? 'animate-spin' : ''}/>
           </button>
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
           <button onClick={() => router.push('/attendance')}
-            className="w-full bg-white rounded-2xl border border-[#E2E8F4] p-4 flex items-center gap-3 hover:border-[#1A3A6B]/30 active:scale-95 transition-all text-left">
+            className="w-full bg-white rounded-2xl border border-[#E2E8F4] p-4 flex items-center gap-3 hover:border-[#075290]/30 active:scale-95 transition-all text-left">
             <div className="w-11 h-11 bg-[#F0FDF4] rounded-xl flex items-center justify-center flex-shrink-0">
               <Clock size={20} className="text-[#166534]"/>
             </div>
@@ -86,7 +86,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
             </div>
           </button>
           <button onClick={() => router.push('/hr/leave')}
-            className="w-full bg-white rounded-2xl border border-[#E2E8F4] p-4 flex items-center gap-3 hover:border-[#1A3A6B]/30 active:scale-95 transition-all text-left">
+            className="w-full bg-white rounded-2xl border border-[#E2E8F4] p-4 flex items-center gap-3 hover:border-[#075290]/30 active:scale-95 transition-all text-left">
             <div className="w-11 h-11 bg-[#FFFBEB] rounded-xl flex items-center justify-center flex-shrink-0">
               <CalendarOff size={20} className="text-[#92400E]"/>
             </div>
@@ -113,7 +113,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
               <p className="text-xs text-[#9AAAC8]">Here's what's happening today.</p>
             </div>
             <button onClick={handleRefresh} disabled={refreshing}
-              className="p-2 rounded-xl border border-[#E2E8F4] text-[#9AAAC8] hover:text-[#1A3A6B] hover:border-[#1A3A6B] transition-colors">
+              className="p-2 rounded-xl border border-[#E2E8F4] text-[#9AAAC8] hover:text-[#075290] hover:border-[#075290] transition-colors">
               <RefreshCw size={15} className={refreshing ? 'animate-spin' : ''}/>
             </button>
           </div>
@@ -140,7 +140,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
             <p className="text-xs text-[#9AAAC8]">Here's what's happening today.</p>
           </div>
           <button onClick={handleRefresh} disabled={refreshing}
-            className="p-2 rounded-xl border border-[#E2E8F4] text-[#9AAAC8] hover:text-[#1A3A6B] hover:border-[#1A3A6B] transition-colors">
+            className="p-2 rounded-xl border border-[#E2E8F4] text-[#9AAAC8] hover:text-[#075290] hover:border-[#075290] transition-colors">
             <RefreshCw size={15} className={refreshing ? 'animate-spin' : ''}/>
           </button>
         </div>
@@ -153,7 +153,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
         {canSeeCRM && (
           <div className="grid grid-cols-2 gap-3">
             <button onClick={() => router.push('/reports')}
-              className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex items-center gap-3 hover:border-[#1A3A6B]/30 active:scale-95 transition-all text-left">
+              className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex items-center gap-3 hover:border-[#075290]/30 active:scale-95 transition-all text-left">
               <div className="w-9 h-9 bg-[#EFF6FF] rounded-xl flex items-center justify-center flex-shrink-0">
                 <BarChart2 size={18} className="text-[#1D4ED8]"/>
               </div>
@@ -163,7 +163,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
               </div>
             </button>
             <button onClick={() => router.push('/properties')}
-              className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex items-center gap-3 hover:border-[#1A3A6B]/30 active:scale-95 transition-all text-left">
+              className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex items-center gap-3 hover:border-[#075290]/30 active:scale-95 transition-all text-left">
               <div className="w-9 h-9 bg-[#F0FDF4] rounded-xl flex items-center justify-center flex-shrink-0">
                 <Home size={18} className="text-[#166534]"/>
               </div>
@@ -174,7 +174,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
             </button>
             {isAdmin && (
               <button onClick={() => router.push('/admin')}
-                className="col-span-2 bg-white rounded-2xl border border-[#E2E8F4] p-3 flex items-center gap-3 hover:border-[#1A3A6B]/30 active:scale-95 transition-all text-left">
+                className="col-span-2 bg-white rounded-2xl border border-[#E2E8F4] p-3 flex items-center gap-3 hover:border-[#075290]/30 active:scale-95 transition-all text-left">
                 <div className="w-9 h-9 bg-[#FEF2F2] rounded-xl flex items-center justify-center flex-shrink-0">
                   <ShieldCheck size={18} className="text-[#991B1B]"/>
                 </div>
@@ -193,7 +193,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
             <div className="text-sm font-bold text-[#0D1B3E] mb-2">HR Overview</div>
             <div className="grid grid-cols-3 gap-2">
               <button onClick={() => router.push('/hr/employees')}
-                className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex flex-col items-center text-center hover:border-[#1A3A6B]/30 active:scale-95 transition-all">
+                className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex flex-col items-center text-center hover:border-[#075290]/30 active:scale-95 transition-all">
                 <div className="w-9 h-9 bg-[#EFF6FF] rounded-xl flex items-center justify-center mb-1.5">
                   <UserCheck size={17} className="text-[#1D4ED8]"/>
                 </div>
@@ -201,7 +201,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
                 <div className="text-[10px] text-[#9AAAC8] leading-tight">Employees</div>
               </button>
               <button onClick={() => router.push('/hr/attendance')}
-                className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex flex-col items-center text-center hover:border-[#1A3A6B]/30 active:scale-95 transition-all">
+                className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex flex-col items-center text-center hover:border-[#075290]/30 active:scale-95 transition-all">
                 <div className="w-9 h-9 bg-[#F0FDF4] rounded-xl flex items-center justify-center mb-1.5">
                   <Clock size={17} className="text-[#166534]"/>
                 </div>
@@ -209,7 +209,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
                 <div className="text-[10px] text-[#9AAAC8] leading-tight">Present Today</div>
               </button>
               <button onClick={() => router.push('/hr/leave')}
-                className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex flex-col items-center text-center hover:border-[#1A3A6B]/30 active:scale-95 transition-all">
+                className="bg-white rounded-2xl border border-[#E2E8F4] p-3 flex flex-col items-center text-center hover:border-[#075290]/30 active:scale-95 transition-all">
                 <div className="w-9 h-9 bg-[#FFFBEB] rounded-xl flex items-center justify-center mb-1.5">
                   <CalendarOff size={17} className="text-[#92400E]"/>
                 </div>
@@ -259,7 +259,7 @@ export function DashboardClient({ profile, stats, pipelineData, recentLeads, isA
                   <div className="text-4xl mb-3">📋</div>
                   <p className="text-sm text-[#9AAAC8] mb-3">No leads yet.</p>
                   <button onClick={() => router.push('/leads')}
-                    className="text-xs font-bold text-white bg-[#1A3A6B] px-4 py-2 rounded-full">
+                    className="text-xs font-bold text-white bg-[#075290] px-4 py-2 rounded-full">
                     + Add first lead
                   </button>
                 </div>

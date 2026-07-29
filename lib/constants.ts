@@ -37,5 +37,5 @@ export const PROPERTY_STATUS_CONFIG = {
   rented:    { label: 'Rented',    bg: '#FFFBEB', color: '#92400E' },
 }
 
-export const NAVY = '#1A3A6B'
+export const NAVY = '#075290'
 export const BLUE = '#1F4FA8'

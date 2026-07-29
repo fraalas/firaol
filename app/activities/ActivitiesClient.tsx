@@ -71,7 +71,7 @@ export function ActivitiesClient({ activities: initial, agentId }: Props) {
     <>
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
         <button onClick={() => setShowAdd(true)}
-          className="w-full bg-[#1A3A6B] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-4">
+          className="w-full bg-[#075290] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-4">
           <Plus size={16}/> Schedule Activity
         </button>
 
@@ -149,7 +149,7 @@ export function ActivitiesClient({ activities: initial, agentId }: Props) {
                   className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#1F4FA8] bg-[#FAFBFE] resize-none" />
               </div>
               <button type="submit" disabled={saving}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70">
+                className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70">
                 {saving && <Loader2 size={16} className="animate-spin"/>}
                 Save Activity
               </button>

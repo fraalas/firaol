@@ -33,7 +33,7 @@ export function AdminClient({ agents, totalLeads }: { agents: Agent[]; totalLead
         ].map((t: any) => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className={`flex-1 py-3 text-xs font-bold flex items-center justify-center gap-1.5 border-b-2 transition-colors ${
-              tab === t.key ? 'text-[#1A3A6B] border-[#1A3A6B]' : 'text-[#9AAAC8] border-transparent'
+              tab === t.key ? 'text-[#075290] border-[#075290]' : 'text-[#9AAAC8] border-transparent'
             }`}>
             <t.icon size={14}/>{t.label}
           </button>
@@ -45,7 +45,7 @@ export function AdminClient({ agents, totalLeads }: { agents: Agent[]; totalLead
           <>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-white rounded-2xl border border-[#E2E8F4] p-4 text-center">
-                <div className="text-2xl font-extrabold text-[#1A3A6B]">{agents.length}</div>
+                <div className="text-2xl font-extrabold text-[#075290]">{agents.length}</div>
                 <div className="text-xs text-[#9AAAC8]">Total Agents</div>
               </div>
               <div className="bg-white rounded-2xl border border-[#E2E8F4] p-4 text-center">
@@ -55,7 +55,7 @@ export function AdminClient({ agents, totalLeads }: { agents: Agent[]; totalLead
             </div>
 
             {topAgent && topAgent.closedDeals > 0 && (
-              <div className="bg-gradient-to-r from-[#1A3A6B] to-[#2E6DD4] rounded-2xl p-4 flex items-center gap-3">
+              <div className="bg-gradient-to-r from-[#075290] to-[#2E6DD4] rounded-2xl p-4 flex items-center gap-3">
                 <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                   {initials(topAgent.full_name)}
                 </div>
@@ -96,7 +96,7 @@ export function AdminClient({ agents, totalLeads }: { agents: Agent[]; totalLead
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       {[
-                        { icon: <Users size={12}/>,      label: 'Total',  val: agent.totalLeads,  color: '#1A3A6B' },
+                        { icon: <Users size={12}/>,      label: 'Total',  val: agent.totalLeads,  color: '#075290' },
                         { icon: <Target size={12}/>,     label: 'Active', val: agent.activeLeads, color: '#1D4ED8' },
                         { icon: <TrendingUp size={12}/>, label: 'Closed', val: agent.closedDeals, color: '#065F46' },
                       ].map(s => (
@@ -113,7 +113,7 @@ export function AdminClient({ agents, totalLeads }: { agents: Agent[]; totalLead
                           <span>Conversion rate</span><span>{agent.convRate}%</span>
                         </div>
                         <div className="h-1.5 bg-[#F0F4FB] rounded-full overflow-hidden">
-                          <div className="h-full rounded-full bg-[#1A3A6B]" style={{ width: `${agent.convRate}%` }}/>
+                          <div className="h-full rounded-full bg-[#075290]" style={{ width: `${agent.convRate}%` }}/>
                         </div>
                       </div>
                     )}

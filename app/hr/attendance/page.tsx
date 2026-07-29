@@ -41,7 +41,7 @@ export default function AttendancePage() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-screen bg-[#F5F7FB]">
-      <div className="w-10 h-10 border-4 border-[#1A3A6B] border-t-transparent rounded-full animate-spin"/>
+      <div className="w-10 h-10 border-4 border-[#075290] border-t-transparent rounded-full animate-spin"/>
     </div>
   )
 

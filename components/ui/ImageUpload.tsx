@@ -99,7 +99,7 @@ export function ImageUpload({ propertyId, existingImages = [], onUploadComplete 
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="aspect-square rounded-xl border-2 border-dashed border-[#E2E8F4] flex flex-col items-center justify-center gap-1 hover:border-[#1A3A6B] hover:bg-[#F5F7FB] transition-all disabled:opacity-50"
+            className="aspect-square rounded-xl border-2 border-dashed border-[#E2E8F4] flex flex-col items-center justify-center gap-1 hover:border-[#075290] hover:bg-[#F5F7FB] transition-all disabled:opacity-50"
           >
             {uploading ? (
               <Loader2 size={20} className="text-[#9AAAC8] animate-spin" />

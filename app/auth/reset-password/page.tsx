@@ -40,7 +40,7 @@ export default function ResetPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>}
-            <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] focus-within:border-[#1A3A6B]">
+            <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] focus-within:border-[#075290]">
               <Lock size={18} className="text-[#9AAAC8] flex-shrink-0"/>
               <input type={showPw ? 'text' : 'password'} placeholder="New password" value={password}
                 onChange={e => setPassword(e.target.value)} required
@@ -49,14 +49,14 @@ export default function ResetPasswordPage() {
                 {showPw ? <EyeOff size={16}/> : <Eye size={16}/>}
               </button>
             </div>
-            <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] focus-within:border-[#1A3A6B]">
+            <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] focus-within:border-[#075290]">
               <Lock size={18} className="text-[#9AAAC8] flex-shrink-0"/>
               <input type="password" placeholder="Confirm new password" value={confirm}
                 onChange={e => setConfirm(e.target.value)} required
                 className="flex-1 bg-transparent text-sm text-[#0D1B3E] outline-none placeholder:text-[#9AAAC8]"/>
             </div>
             <button type="submit" disabled={loading}
-              className="w-full bg-[#1A3A6B] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70">
+              className="w-full bg-[#075290] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70">
               {loading && <Loader2 size={16} className="animate-spin"/>}
               Update Password
             </button>

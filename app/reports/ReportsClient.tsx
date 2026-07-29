@@ -22,7 +22,7 @@ interface Props {
   actData:     { type: string; count: number; completed: number }[]
 }
 
-function StatCard({ value, label, sub, color = '#1A3A6B' }: { value: string|number; label: string; sub?: string; color?: string }) {
+function StatCard({ value, label, sub, color = '#075290' }: { value: string|number; label: string; sub?: string; color?: string }) {
   return (
     <div className="bg-white rounded-2xl border border-[#E2E8F4] p-4 text-center">
       <div className="text-2xl font-extrabold" style={{ color }}>{value}</div>
@@ -111,7 +111,7 @@ export function ReportsClient({ stats, stageData, sourceData, monthlyData, actDa
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#9AAAC8' }} axisLine={false} tickLine={false}/>
             <YAxis tick={{ fontSize: 10, fill: '#9AAAC8' }} axisLine={false} tickLine={false} allowDecimals={false}/>
             <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #E2E8F4' }} cursor={{ fill: '#F0F4FB' }}/>
-            <Bar dataKey="count" name="Leads" fill="#1A3A6B" radius={[4,4,0,0]}/>
+            <Bar dataKey="count" name="Leads" fill="#075290" radius={[4,4,0,0]}/>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -121,7 +121,7 @@ export function ReportsClient({ stats, stageData, sourceData, monthlyData, actDa
         <SectionTitle title="Lead Sources"/>
         {sourceData.map(s => (
           <ProgressBar key={s.source} label={s.source.replace('_',' ')} count={s.count}
-            max={Math.max(...sourceData.map(x => x.count), 1)} color="#1A3A6B"/>
+            max={Math.max(...sourceData.map(x => x.count), 1)} color="#075290"/>
         ))}
       </div>
 
@@ -130,7 +130,7 @@ export function ReportsClient({ stats, stageData, sourceData, monthlyData, actDa
         <SectionTitle title="Properties"/>
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#F5F7FB] rounded-xl p-3 text-center">
-            <div className="text-xl font-extrabold text-[#1A3A6B]">{stats.totalProperties}</div>
+            <div className="text-xl font-extrabold text-[#075290]">{stats.totalProperties}</div>
             <div className="text-xs text-[#9AAAC8]">Total Listed</div>
           </div>
           <div className="bg-[#F5F7FB] rounded-xl p-3 text-center">
@@ -159,7 +159,7 @@ export function ReportsClient({ stats, stageData, sourceData, monthlyData, actDa
                   <span className="text-[#9AAAC8]">{a.completed}/{a.count}</span>
                 </div>
                 <div className="h-1.5 bg-[#F0F4FB] rounded-full overflow-hidden">
-                  <div className="h-full rounded-full bg-[#1A3A6B]" style={{ width: `${pct}%`}}/>
+                  <div className="h-full rounded-full bg-[#075290]" style={{ width: `${pct}%`}}/>
                 </div>
               </div>
             </div>

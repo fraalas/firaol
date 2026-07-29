@@ -137,10 +137,10 @@ export function TwoFactorSection() {
                 placeholder="Enter 6-digit code"
                 value={code}
                 onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
-                className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-center text-lg tracking-[0.3em] font-bold text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+                className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-center text-lg tracking-[0.3em] font-bold text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
               />
               <button type="submit" disabled={verifying || code.length !== 6}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50">
+                className="w-full bg-[#075290] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50">
                 {verifying && <Loader2 size={16} className="animate-spin"/>}
                 {verifying ? 'Verifying...' : 'Confirm & Enable'}
               </button>

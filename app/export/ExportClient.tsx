@@ -68,7 +68,7 @@ export function ExportClient({ leads, properties, agentName }: Props) {
         <div className="text-sm font-bold text-[#0D1B3E] mb-3">Data preview</div>
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#F5F7FB] rounded-xl p-3 flex items-center gap-3">
-            <Users size={18} className="text-[#1A3A6B]" />
+            <Users size={18} className="text-[#075290]" />
             <div>
               <div className="text-lg font-extrabold text-[#0D1B3E]">{leads.length}</div>
               <div className="text-[10px] text-[#9AAAC8]">Total leads</div>
@@ -86,7 +86,7 @@ export function ExportClient({ leads, properties, agentName }: Props) {
             <div className="text-[10px] text-[#9AAAC8]">Closed deals</div>
           </div>
           <div className="bg-[#F5F7FB] rounded-xl p-3 text-center">
-            <div className="text-lg font-extrabold text-[#1A3A6B]">{convRate}%</div>
+            <div className="text-lg font-extrabold text-[#075290]">{convRate}%</div>
             <div className="text-[10px] text-[#9AAAC8]">Conversion</div>
           </div>
         </div>
@@ -115,7 +115,7 @@ export function ExportClient({ leads, properties, agentName }: Props) {
                     ? 'bg-[#D1FAE5]'
                     : st === 'error'
                     ? 'bg-[#FEE2E2]'
-                    : 'bg-[#1A3A6B] hover:bg-[#1F4FA8] active:scale-95'
+                    : 'bg-[#075290] hover:bg-[#1F4FA8] active:scale-95'
                 }`}
               >
                 {st === 'loading' ? <Loader2 size={18} className="text-white animate-spin" /> :

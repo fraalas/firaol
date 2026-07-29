@@ -82,7 +82,7 @@ export default function Verify2FAPage() {
 
         {loading ? (
           <div className="pb-10 flex justify-center">
-            <Loader2 size={22} className="animate-spin text-[#1A3A6B]"/>
+            <Loader2 size={22} className="animate-spin text-[#075290]"/>
           </div>
         ) : (
           <form onSubmit={handleVerify} className="px-8 pb-8 space-y-4">
@@ -95,10 +95,10 @@ export default function Verify2FAPage() {
               placeholder="000000"
               value={code}
               onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
-              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-4 text-center text-2xl tracking-[0.5em] font-bold text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+              className="w-full border border-[#E2E8F4] rounded-xl px-4 py-4 text-center text-2xl tracking-[0.5em] font-bold text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
             />
             <button type="submit" disabled={verifying || code.length !== 6}
-              className="w-full bg-[#1A3A6B] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50">
+              className="w-full bg-[#075290] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50">
               {verifying && <Loader2 size={16} className="animate-spin"/>}
               {verifying ? 'Verifying...' : 'Verify'}
             </button>

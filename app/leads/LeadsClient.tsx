@@ -101,7 +101,7 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
               placeholder="Search leads..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <button onClick={() => setShowAdd(true)}
-            className="bg-[#1A3A6B] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold">
+            className="bg-[#075290] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold">
             <Plus size={16}/> Add
           </button>
         </div>
@@ -111,7 +111,7 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
             <button key={s.key} onClick={() => setFilter(s.key)}
               className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                 filter === s.key
-                  ? 'bg-[#1A3A6B] text-white border-[#1A3A6B]'
+                  ? 'bg-[#075290] text-white border-[#075290]'
                   : 'bg-white text-[#4A5880] border-[#E2E8F4]'
               }`}>
               {s.label}
@@ -188,7 +188,7 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
                     placeholder={(f as any).placeholder ?? ''}
                     value={(form as any)[f.key]}
                     onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
                   />
                 </div>
               ))}
@@ -213,7 +213,7 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
                 </select>
               </div>
               <button type="submit" disabled={saving}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
+                className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
                 {saving && <Loader2 size={16} className="animate-spin"/>}
                 Save Lead
               </button>

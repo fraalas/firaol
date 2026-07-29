@@ -102,7 +102,7 @@ export function ProfileClient({ profile, email, companyName, viewerRole, leadsCo
   return (
     <div className="flex-1 overflow-y-auto pb-24">
       {/* Hero */}
-      <div className="bg-[#1A3A6B] px-4 py-7 flex flex-col items-center">
+      <div className="bg-[#075290] px-4 py-7 flex flex-col items-center">
         <div className="relative mb-3">
           <div className="w-20 h-20 rounded-full bg-[#2E5FA8] border-4 border-white/30 flex items-center justify-center text-white text-2xl font-extrabold overflow-hidden">
             {avatarUrl
@@ -111,7 +111,7 @@ export function ProfileClient({ profile, email, companyName, viewerRole, leadsCo
           </div>
           <button onClick={() => fileInput.current?.click()} disabled={uploading}
             className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-md disabled:opacity-60">
-            {uploading ? <Loader2 size={13} className="animate-spin text-[#1A3A6B]"/> : <Camera size={13} className="text-[#1A3A6B]"/>}
+            {uploading ? <Loader2 size={13} className="animate-spin text-[#075290]"/> : <Camera size={13} className="text-[#075290]"/>}
           </button>
           <input ref={fileInput} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
         </div>
@@ -160,7 +160,7 @@ export function ProfileClient({ profile, email, companyName, viewerRole, leadsCo
                 <label className="text-xs text-[#9AAAC8] mb-1 block">{f.label}</label>
                 <input type={f.type} value={(form as any)[f.key]}
                   onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"/>
+                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#075290] bg-[#FAFBFE]"/>
               </div>
             ))}
             <div>
@@ -185,7 +185,7 @@ export function ProfileClient({ profile, email, companyName, viewerRole, leadsCo
                 <input type="text" value={(form as any)[f.key]}
                   disabled={!canEditOrgFields}
                   onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                  className={`w-full border border-[#E2E8F4] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#1A3A6B] ${
+                  className={`w-full border border-[#E2E8F4] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#075290] ${
                     canEditOrgFields ? 'bg-[#FAFBFE]' : 'bg-[#F5F7FB] text-[#9AAAC8]'
                   }`}/>
               </div>
@@ -253,7 +253,7 @@ export function ProfileClient({ profile, email, companyName, viewerRole, leadsCo
             </div>
             <button onClick={() => setNotifs(!notifs)}
               className="w-10 h-[22px] rounded-full relative flex-shrink-0 transition-colors"
-              style={{ background: notifs ? '#1A3A6B' : '#E2E8F4' }}>
+              style={{ background: notifs ? '#075290' : '#E2E8F4' }}>
               <span className={`absolute top-[3px] w-4 h-4 rounded-full bg-white shadow-sm transition-all ${notifs ? 'right-[3px]' : 'left-[3px]'}`}/>
             </button>
           </div>

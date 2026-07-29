@@ -89,11 +89,11 @@ export function LeaveClient({
           <div className="flex gap-2 mb-4">
             <button onClick={() => setTab('mine')}
               className={`flex-1 text-sm font-semibold py-2.5 rounded-xl border transition-colors ${
-                tab === 'mine' ? 'bg-[#1A3A6B] text-white border-[#1A3A6B]' : 'bg-white text-[#4A5880] border-[#E2E8F4]'
+                tab === 'mine' ? 'bg-[#075290] text-white border-[#075290]' : 'bg-white text-[#4A5880] border-[#E2E8F4]'
               }`}>My Requests</button>
             <button onClick={() => setTab('all')}
               className={`flex-1 text-sm font-semibold py-2.5 rounded-xl border transition-colors ${
-                tab === 'all' ? 'bg-[#1A3A6B] text-white border-[#1A3A6B]' : 'bg-white text-[#4A5880] border-[#E2E8F4]'
+                tab === 'all' ? 'bg-[#075290] text-white border-[#075290]' : 'bg-white text-[#4A5880] border-[#E2E8F4]'
               }`}>All Requests
               {allRequests.filter(r => r.status === 'pending').length > 0 && (
                 <span className="ml-1.5 bg-[#FFFBEB] text-[#92400E] text-[10px] px-1.5 py-0.5 rounded-full">
@@ -106,7 +106,7 @@ export function LeaveClient({
 
         {tab === 'mine' && !notFoundEmployee && (
           <button onClick={() => setShowAdd(true)}
-            className="w-full bg-[#1A3A6B] text-white rounded-xl py-3 flex items-center justify-center gap-2 text-sm font-bold mb-4">
+            className="w-full bg-[#075290] text-white rounded-xl py-3 flex items-center justify-center gap-2 text-sm font-bold mb-4">
             <Plus size={16}/> Request Leave
           </button>
         )}
@@ -176,13 +176,13 @@ export function LeaveClient({
                   <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Start Date *</label>
                   <input type="date" required value={form.start_date}
                     onChange={e => setForm(p => ({ ...p, start_date: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">End Date *</label>
                   <input type="date" required value={form.end_date}
                     onChange={e => setForm(p => ({ ...p, end_date: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
                 </div>
               </div>
               {form.start_date && form.end_date && (
@@ -192,10 +192,10 @@ export function LeaveClient({
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Reason</label>
                 <textarea value={form.reason} rows={3}
                   onChange={e => setForm(p => ({ ...p, reason: e.target.value }))}
-                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE] resize-none" />
+                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE] resize-none" />
               </div>
               <button type="submit" disabled={saving}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
+                className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
                 {saving && <Loader2 size={16} className="animate-spin"/>}
                 Submit Request
               </button>

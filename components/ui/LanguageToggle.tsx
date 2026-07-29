@@ -12,7 +12,7 @@ export function LanguageToggle() {
           onClick={() => setLocale(l)}
           className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${
             locale === l
-              ? 'bg-white text-[#1A3A6B]'
+              ? 'bg-white text-[#075290]'
               : 'text-white/70 hover:text-white'
           }`}
         >

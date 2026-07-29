@@ -18,7 +18,7 @@ export default function SignupPage() {
             Sales Manager.
           </p>
           <Link href="/auth/login"
-            className="w-full bg-[#1A3A6B] text-white font-bold py-4 rounded-xl text-sm mt-6 block">
+            className="w-full bg-[#075290] text-white font-bold py-4 rounded-xl text-sm mt-6 block">
             Back to Login
           </Link>
         </div>

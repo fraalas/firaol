@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy:    { DEFAULT: '#1A3A6B', dark: '#0D2450' },
+        navy:    { DEFAULT: '#075290', dark: '#0D2450' },
         brand:   { DEFAULT: '#1F4FA8', mid: '#2E6DD4', light: '#4A8FE8' },
         cyan:    '#4BAEE8',
       },

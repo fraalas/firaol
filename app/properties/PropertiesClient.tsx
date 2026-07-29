@@ -18,8 +18,8 @@ const STATUS_FILTERS = [
 ]
 
 const PROP_GRADIENTS = [
-  'from-[#1A3A6B] to-[#2E6DD4]',
-  'from-[#0D2450] to-[#1A3A6B]',
+  'from-[#075290] to-[#2E6DD4]',
+  'from-[#0D2450] to-[#075290]',
   'from-[#1F4FA8] to-[#4A8FE8]',
   'from-[#064E3B] to-[#0F766E]',
 ]
@@ -76,7 +76,7 @@ export function PropertiesClient({ properties: initial, agentId, userRole }: Pro
               placeholder="Search properties..." value={search} onChange={e => setSearch(e.target.value)}/>
           </div>
           <button onClick={() => setShowAdd(true)}
-            className="bg-[#1A3A6B] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold">
+            className="bg-[#075290] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold">
             <Plus size={16}/> Add
           </button>
         </div>
@@ -86,7 +86,7 @@ export function PropertiesClient({ properties: initial, agentId, userRole }: Pro
           {STATUS_FILTERS.map(f => (
             <button key={f.key} onClick={() => setFilter(f.key)}
               className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
-                filter === f.key ? 'bg-[#1A3A6B] text-white border-[#1A3A6B]' : 'bg-white text-[#4A5880] border-[#E2E8F4]'
+                filter === f.key ? 'bg-[#075290] text-white border-[#075290]' : 'bg-white text-[#4A5880] border-[#E2E8F4]'
               }`}>
               {f.label} {f.key !== 'all' && `(${props.filter(p => p.status === f.key).length})`}
             </button>
@@ -103,7 +103,7 @@ export function PropertiesClient({ properties: initial, agentId, userRole }: Pro
                 const grad = PROP_GRADIENTS[i % PROP_GRADIENTS.length]
                 return (
                   <button key={p.id} onClick={() => router.push(`/properties/${p.id}`)}
-                    className="w-full bg-white rounded-2xl border border-[#E2E8F4] overflow-hidden text-left hover:border-[#1A3A6B]/30 hover:shadow-sm transition-all">
+                    className="w-full bg-white rounded-2xl border border-[#E2E8F4] overflow-hidden text-left hover:border-[#075290]/30 hover:shadow-sm transition-all">
                     {/* Image placeholder */}
                     <div className={`h-32 bg-gradient-to-br ${grad} flex items-end p-3 relative`}>
                       <div className="absolute inset-0 flex items-center justify-center opacity-10">
@@ -186,7 +186,7 @@ export function PropertiesClient({ properties: initial, agentId, userRole }: Pro
               onChange={e => setForm(p=>({...p,description:e.target.value}))} placeholder="Property details..."/>
           </FormField>
           <button type="submit" disabled={saving}
-            className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
             {saving && <Loader2 size={16} className="animate-spin"/>} Save Property
           </button>
         </form>

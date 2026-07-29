@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useState } from 'react'
 import { Plus, Loader2, X, Copy, Check } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -69,7 +69,7 @@ export function TeamClient({ agents, companyId, onChange }: Props) {
     <>
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
         <button onClick={() => setShowAdd(true)}
-          className="w-full bg-[#1A3A6B] text-white rounded-xl py-3 flex items-center justify-center gap-2 text-sm font-bold mb-4">
+          className="w-full bg-[#075290] text-white rounded-xl py-3 flex items-center justify-center gap-2 text-sm font-bold mb-4">
           <Plus size={16}/> Create Agent Account
         </button>
 
@@ -117,22 +117,22 @@ export function TeamClient({ agents, companyId, onChange }: Props) {
                   <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Full Name *</label>
                   <input type="text" required value={form.fullName}
                     onChange={e => setForm(p => ({ ...p, fullName: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Email *</label>
                   <input type="email" required value={form.email}
                     onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Phone</label>
                   <input type="tel" value={form.phone}
                     onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
                 </div>
                 <button type="submit" disabled={creating}
-                  className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
+                  className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
                   {creating && <Loader2 size={16} className="animate-spin"/>}
                   Create Account
                 </button>
@@ -140,7 +140,7 @@ export function TeamClient({ agents, companyId, onChange }: Props) {
             ) : (
               <>
                 <p className="text-sm text-[#4A5880] mb-4">
-                  Account created. Share these credentials with <span className="font-semibold">{form.fullName}</span> — this password won't be shown again.
+                  Account created. Share these credentials with <span className="font-semibold">{form.fullName}</span> � this password won't be shown again.
                 </p>
                 <div className="bg-[#F5F7FB] rounded-xl p-4 space-y-2 mb-4">
                   <div>
@@ -156,12 +156,12 @@ export function TeamClient({ agents, companyId, onChange }: Props) {
                     navigator.clipboard.writeText(`Email: ${result.email}\nPassword: ${result.tempPassword}`)
                     setCopied(true)
                   }}
-                  className="w-full bg-white border border-[#E2E8F4] text-[#1A3A6B] font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-2">
+                  className="w-full bg-white border border-[#E2E8F4] text-[#075290] font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-2">
                   {copied ? <Check size={15}/> : <Copy size={15}/>}
                   {copied ? 'Copied!' : 'Copy credentials'}
                 </button>
                 <button onClick={closeModal}
-                  className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm">
+                  className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm">
                   Done
                 </button>
               </>

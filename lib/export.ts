@@ -85,7 +85,7 @@ export async function exportLeadsToPDF(leads: Lead[], agentName = 'Sanchos Real 
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
 
   // Header
-  doc.setFillColor(26, 58, 107) // #1A3A6B
+  doc.setFillColor(26, 58, 107) // #075290
   doc.rect(0, 0, 297, 22, 'F')
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(14)

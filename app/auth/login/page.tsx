@@ -52,7 +52,7 @@ export default function LoginPage() {
     <div className="min-h-screen grid md:grid-cols-2 bg-[#F5F7FB]">
 
       {/* Left branding panel — desktop only */}
-      <div className="hidden md:flex relative overflow-hidden bg-[#1A3A6B] flex-col items-center justify-center px-12 py-16">
+      <div className="hidden md:flex relative overflow-hidden bg-[#075290] flex-col items-center justify-center px-12 py-16">
 
         {/* Geometric pattern texture — subtle, behind everything */}
         <div
@@ -102,14 +102,14 @@ export default function LoginPage() {
               {error && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 animate-shake">{error}</div>}
               {msg   && <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-sm text-blue-700 animate-fade-in-up">{msg}</div>}
 
-              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#1A3A6B] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
+              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#075290] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
                 <Mail size={18} className="text-[#9AAAC8] flex-shrink-0"/>
                 <input type="email" placeholder="Email address" value={email}
                   onChange={e => setEmail(e.target.value)} required
                   className="flex-1 bg-transparent text-sm text-[#0D1B3E] outline-none placeholder:text-[#9AAAC8]"/>
               </div>
 
-              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#1A3A6B] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
+              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#075290] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
                 <Lock size={18} className="text-[#9AAAC8] flex-shrink-0"/>
                 <input type={showPw ? 'text' : 'password'} placeholder="Password" value={password}
                   onChange={e => setPassword(e.target.value)} required
@@ -121,13 +121,13 @@ export default function LoginPage() {
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 text-sm text-[#4A5880]">
-                  <input type="checkbox" className="rounded accent-[#1A3A6B]"/> Remember me
+                  <input type="checkbox" className="rounded accent-[#075290]"/> Remember me
                 </label>
                 <Link href="/auth/forgot-password" className="text-sm text-[#1F4FA8] font-semibold hover:underline">Forgot Password?</Link>
               </div>
 
               <button type="submit" disabled={loading}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-[#1F4FA8] hover:scale-[1.01] active:scale-[0.99] transition-all duration-150">
+                className="w-full bg-[#075290] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-[#1F4FA8] hover:scale-[1.01] active:scale-[0.99] transition-all duration-150">
                 {loading && <Loader2 size={16} className="animate-spin"/>}
                 {loading ? 'Logging in...' : 'Login'}
               </button>

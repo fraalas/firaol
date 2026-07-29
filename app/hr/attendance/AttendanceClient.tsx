@@ -89,7 +89,7 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
           </div>
           <button onClick={() => setShowAdd(true)}
             disabled={employees.length === 0}
-            className="bg-[#1A3A6B] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold disabled:opacity-40">
+            className="bg-[#075290] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold disabled:opacity-40">
             <Plus size={16}/> Add
           </button>
         </div>
@@ -99,7 +99,7 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
             <button key={s.key} onClick={() => setFilter(s.key)}
               className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                 filter === s.key
-                  ? 'bg-[#1A3A6B] text-white border-[#1A3A6B]'
+                  ? 'bg-[#075290] text-white border-[#075290]'
                   : 'bg-white text-[#4A5880] border-[#E2E8F4]'
               }`}>
               {s.label}
@@ -176,20 +176,20 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Date *</label>
                 <input type="date" required value={form.date}
                   onChange={e => setForm(p => ({ ...p, date: e.target.value }))}
-                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Check In (EAT)</label>
                   <input type="time" value={form.check_in}
                     onChange={e => setForm(p => ({ ...p, check_in: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Check Out (EAT)</label>
                   <input type="time" value={form.check_out}
                     onChange={e => setForm(p => ({ ...p, check_out: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
                 </div>
               </div>
               <p className="text-[11px] text-[#9AAAC8] -mt-1.5">Times are in East Africa Time (UTC+3). Work hours calculate automatically.</p>
@@ -207,10 +207,10 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Notes</label>
                 <input type="text" value={form.notes}
                   onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
-                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]" />
+                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]" />
               </div>
               <button type="submit" disabled={saving}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
+                className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
                 {saving && <Loader2 size={16} className="animate-spin"/>}
                 Save Record
               </button>

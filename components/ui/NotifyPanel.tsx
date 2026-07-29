@@ -57,7 +57,7 @@ export function NotifyPanel({ agents }: Props) {
   return (
     <div className="bg-white rounded-2xl border border-[#E2E8F4] overflow-hidden">
       <div className="px-4 py-3 border-b border-[#E2E8F4] flex items-center gap-2">
-        <Bell size={15} className="text-[#1A3A6B]" />
+        <Bell size={15} className="text-[#075290]" />
         <span className="text-sm font-bold text-[#0D1B3E]">Send Notification</span>
       </div>
 
@@ -67,7 +67,7 @@ export function NotifyPanel({ agents }: Props) {
           {(['whatsapp', 'sms'] as const).map(t => (
             <button key={t} onClick={() => setType(t)}
               className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border-2 transition-all ${
-                type === t ? 'bg-[#1A3A6B] text-white border-[#1A3A6B]' : 'border-[#E2E8F4] text-[#4A5880]'
+                type === t ? 'bg-[#075290] text-white border-[#075290]' : 'border-[#E2E8F4] text-[#4A5880]'
               }`}>
               {t === 'whatsapp' ? <MessageSquare size={13}/> : <Phone size={13}/>}
               {t === 'whatsapp' ? 'WhatsApp' : 'SMS'}
@@ -95,11 +95,11 @@ export function NotifyPanel({ agents }: Props) {
               <button key={agent.id} onClick={() => toggleAgent(agent.id)}
                 className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left border transition-all ${
                   selected.includes(agent.id)
-                    ? 'bg-[#EFF6FF] border-[#1A3A6B]'
+                    ? 'bg-[#EFF6FF] border-[#075290]'
                     : 'border-[#E2E8F4] hover:bg-[#FAFBFE]'
                 }`}>
                 <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                  selected.includes(agent.id) ? 'bg-[#1A3A6B] border-[#1A3A6B]' : 'border-[#E2E8F4]'
+                  selected.includes(agent.id) ? 'bg-[#075290] border-[#075290]' : 'border-[#E2E8F4]'
                 }`}>
                   {selected.includes(agent.id) && (
                     <div className="w-1.5 h-1.5 rounded-full bg-white" />
@@ -124,7 +124,7 @@ export function NotifyPanel({ agents }: Props) {
               { label: 'Team update', msg: '📢 Sanchos CRM: Team meeting today at 4:30 PM. Please be prepared with your pipeline update.' },
             ].map(tpl => (
               <button key={tpl.label} onClick={() => setMessage(tpl.msg)}
-                className="flex-shrink-0 text-[10px] font-semibold px-3 py-1.5 rounded-full bg-[#F5F7FB] border border-[#E2E8F4] text-[#4A5880] hover:border-[#1A3A6B] transition-colors">
+                className="flex-shrink-0 text-[10px] font-semibold px-3 py-1.5 rounded-full bg-[#F5F7FB] border border-[#E2E8F4] text-[#4A5880] hover:border-[#075290] transition-colors">
                 {tpl.label}
               </button>
             ))}
@@ -138,7 +138,7 @@ export function NotifyPanel({ agents }: Props) {
             onChange={e => setMessage(e.target.value)}
             rows={3}
             placeholder="Type your message..."
-            className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE] resize-none transition-colors"
+            className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE] resize-none transition-colors"
           />
           <div className="text-[10px] text-[#9AAAC8] mt-1">{message.length}/160 characters</div>
         </div>
@@ -151,7 +151,7 @@ export function NotifyPanel({ agents }: Props) {
           onClick={handleSend}
           disabled={sending || !selected.length || !message.trim()}
           className={`w-full py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50 ${
-            sent ? 'bg-[#D1FAE5] text-[#065F46]' : 'bg-[#1A3A6B] text-white hover:bg-[#1F4FA8]'
+            sent ? 'bg-[#D1FAE5] text-[#065F46]' : 'bg-[#075290] text-white hover:bg-[#1F4FA8]'
           }`}
         >
           {sending  ? <Loader2 size={16} className="animate-spin" /> :

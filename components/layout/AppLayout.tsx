@@ -68,7 +68,7 @@ export function AppLayout({ children, title, subtitle }: Props) {
     <div className="flex h-screen bg-[#F5F7FB] overflow-hidden">
 
       {/* ── DESKTOP SIDEBAR ─────────────────────────────── */}
-      <aside className="hidden md:flex flex-col w-64 bg-[#1A3A6B] flex-shrink-0">
+      <aside className="hidden md:flex flex-col w-64 bg-[#075290] flex-shrink-0">
         {/* Logo */}
         <div className="px-6 py-6 border-b border-white/10">
           <SanchosLogoSmall />
@@ -150,14 +150,14 @@ export function AppLayout({ children, title, subtitle }: Props) {
           </div>
           {isActive('/leads') && (
             <button onClick={() => router.push('/leads')}
-              className="bg-[#1A3A6B] text-white font-bold px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 hover:bg-[#1F4FA8] transition-colors">
+              className="bg-[#075290] text-white font-bold px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 hover:bg-[#1F4FA8] transition-colors">
               <Plus size={16}/> Add Lead
             </button>
           )}
         </header>
 
         {/* Mobile top bar */}
-        <header className="md:hidden bg-[#1A3A6B] px-4 py-3 flex items-center justify-between flex-shrink-0">
+        <header className="md:hidden bg-[#075290] px-4 py-3 flex items-center justify-between flex-shrink-0">
           <SanchosLogoSmall />
           <button onClick={handleLogout}
             className="border border-white/30 rounded-lg px-3 py-1.5 text-white text-xs font-semibold flex items-center gap-1.5">
@@ -180,7 +180,7 @@ export function AppLayout({ children, title, subtitle }: Props) {
             if (isMiddle) return (
               <div key="fab-wrap" className="flex flex-col items-center">
                 <button onClick={() => router.push('/leads')}
-                  className="w-14 h-14 rounded-full bg-[#1A3A6B] flex items-center justify-center -mt-6 shadow-lg">
+                  className="w-14 h-14 rounded-full bg-[#075290] flex items-center justify-center -mt-6 shadow-lg">
                   <Plus size={26} className="text-white"/>
                 </button>
               </div>
@@ -188,11 +188,11 @@ export function AppLayout({ children, title, subtitle }: Props) {
             return (
               <button key={item.href} onClick={() => router.push(item.href)}
                 className={`flex flex-col items-center gap-0.5 min-w-[52px] py-1 transition-colors ${
-                  active ? 'text-[#1A3A6B]' : 'text-[#B0BDD4]'
+                  active ? 'text-[#075290]' : 'text-[#B0BDD4]'
                 }`}>
                 <Icon size={22} strokeWidth={active ? 2.2 : 1.8}/>
                 <span className="text-[10px] font-semibold">{item.label}</span>
-                {active && <span className="w-1 h-1 rounded-full bg-[#1A3A6B]"/>}
+                {active && <span className="w-1 h-1 rounded-full bg-[#075290]"/>}
               </button>
             )
           })}

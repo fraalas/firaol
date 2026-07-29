@@ -79,7 +79,7 @@ export default function DashboardPage() {
   if (loading) return (
     <div className="flex items-center justify-center h-screen bg-[#F5F7FB]">
       <div className="text-center">
-        <div className="w-12 h-12 border-4 border-[#1A3A6B] border-t-transparent rounded-full animate-spin mx-auto mb-4"/>
+        <div className="w-12 h-12 border-4 border-[#075290] border-t-transparent rounded-full animate-spin mx-auto mb-4"/>
         <p className="text-sm text-[#9AAAC8] font-medium">Loading your dashboard...</p>
       </div>
     </div>
@@ -91,7 +91,7 @@ export default function DashboardPage() {
         <p className="text-red-500 text-sm font-medium mb-3">Error loading dashboard</p>
         <p className="text-[#9AAAC8] text-xs mb-4">{error}</p>
         <button onClick={() => window.location.reload()}
-          className="bg-[#1A3A6B] text-white px-6 py-2 rounded-xl text-sm font-bold">Try Again</button>
+          className="bg-[#075290] text-white px-6 py-2 rounded-xl text-sm font-bold">Try Again</button>
       </div>
     </div>
   )

@@ -61,7 +61,7 @@ export function MyAttendanceClient({ employee, companyId, today, history, onChan
             <Clock size={40} className="mx-auto text-[#9AAAC8] mb-3" />
             <p className="text-sm text-[#4A5880] mb-5">You haven't checked in today.</p>
             <button onClick={handleCheckIn} disabled={busy}
-              className="w-full bg-[#1A3A6B] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+              className="w-full bg-[#075290] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
               {busy ? <Loader2 size={18} className="animate-spin"/> : <LogIn size={18}/>}
               Check In
             </button>
@@ -74,7 +74,7 @@ export function MyAttendanceClient({ employee, companyId, today, history, onChan
             <p className="text-sm text-[#4A5880] mb-1">Checked in at</p>
             <p className="text-2xl font-bold text-[#0D1B3E] mb-5">{formatEATTime(today.check_in)}</p>
             <button onClick={handleCheckOut} disabled={busy}
-              className="w-full bg-[#1A3A6B] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+              className="w-full bg-[#075290] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
               {busy ? <Loader2 size={18} className="animate-spin"/> : <LogOut size={18}/>}
               Check Out
             </button>
@@ -89,7 +89,7 @@ export function MyAttendanceClient({ employee, companyId, today, history, onChan
               {formatEATTime(today.check_in)} – {formatEATTime(today.check_out)}
             </p>
             {today.work_hours && (
-              <p className="text-2xl font-bold text-[#1A3A6B]">{today.work_hours}h worked</p>
+              <p className="text-2xl font-bold text-[#075290]">{today.work_hours}h worked</p>
             )}
           </>
         )}

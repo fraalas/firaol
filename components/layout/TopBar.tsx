@@ -20,7 +20,7 @@ export function TopBar({ title, subtitle, right }: TopBarProps) {
   }
 
   return (
-    <header className="bg-[#1A3A6B] px-4 py-3 flex items-center justify-between flex-shrink-0">
+    <header className="bg-[#075290] px-4 py-3 flex items-center justify-between flex-shrink-0">
       {title ? (
         <div>
           <div className="text-white font-bold text-[16px] leading-tight">{title}</div>

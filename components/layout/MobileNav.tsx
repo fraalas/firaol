@@ -20,7 +20,7 @@ export function MobileNav() {
       {NAV.map((item, i) => {
         if (!item) return (
           <button key="fab" onClick={() => router.push('/leads')}
-            className="w-14 h-14 rounded-full bg-[#1A3A6B] flex items-center justify-center -mt-6 shadow-lg active:scale-95 transition-transform">
+            className="w-14 h-14 rounded-full bg-[#075290] flex items-center justify-center -mt-6 shadow-lg active:scale-95 transition-transform">
             <Plus size={26} className="text-white" />
           </button>
         )
@@ -28,10 +28,10 @@ export function MobileNav() {
         const active = pathname === item.href || pathname.startsWith(item.href + '/')
         return (
           <button key={item.href} onClick={() => router.push(item.href)}
-            className={`flex flex-col items-center gap-0.5 min-w-[52px] py-1 transition-colors ${active ? 'text-[#1A3A6B]' : 'text-[#B0BDD4]'}`}>
+            className={`flex flex-col items-center gap-0.5 min-w-[52px] py-1 transition-colors ${active ? 'text-[#075290]' : 'text-[#B0BDD4]'}`}>
             <Icon size={22} strokeWidth={active ? 2.2 : 1.8} />
             <span className="text-[10px] font-semibold">{item.label}</span>
-            {active && <span className="w-1 h-1 rounded-full bg-[#1A3A6B]" />}
+            {active && <span className="w-1 h-1 rounded-full bg-[#075290]" />}
           </button>
         )
       })}

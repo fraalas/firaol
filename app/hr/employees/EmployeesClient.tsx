@@ -338,7 +338,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
     const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
     doc.setFontSize(16)
-    doc.setTextColor(26, 58, 107) // #1A3A6B
+    doc.setTextColor(26, 58, 107) // #075290
     doc.text('Sanchos Real Estate — Employee Report', 14, 16)
     doc.setFontSize(10)
     doc.setTextColor(120, 120, 120)
@@ -376,7 +376,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
               placeholder="Search employees..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <button onClick={() => setShowAdd(true)}
-            className="bg-[#1A3A6B] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold">
+            className="bg-[#075290] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold">
             <Plus size={16}/> Add
           </button>
         </div>
@@ -424,7 +424,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
             <button key={s.key} onClick={() => setFilter(s.key)}
               className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                 filter === s.key
-                  ? 'bg-[#1A3A6B] text-white border-[#1A3A6B]'
+                  ? 'bg-[#075290] text-white border-[#075290]'
                   : 'bg-white text-[#4A5880] border-[#E2E8F4]'
               }`}>
               {s.label}
@@ -484,7 +484,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
                   )}
                 </div>
                 <div className="flex flex-col gap-1.5 flex-shrink-0 ml-1">
-                  <button onClick={() => openEdit(emp)} className="text-[#9AAAC8] hover:text-[#1A3A6B] p-1">
+                  <button onClick={() => openEdit(emp)} className="text-[#9AAAC8] hover:text-[#075290] p-1">
                     <Edit2 size={14}/>
                   </button>
                   <button onClick={() => setDeleteTarget(emp)} className="text-[#9AAAC8] hover:text-red-500 p-1">
@@ -520,7 +520,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
                     required={f.key === 'full_name' || f.key === 'email'}
                     value={(form as any)[f.key]}
                     onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
                   />
                 </div>
               ))}
@@ -544,7 +544,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
                 </select>
               </div>
               <button type="submit" disabled={saving}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
+                className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
                 {saving && <Loader2 size={16} className="animate-spin"/>}
                 Save Employee
               </button>
@@ -577,7 +577,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
                     required={f.key === 'full_name' || f.key === 'email'}
                     value={(editForm as any)[f.key]}
                     onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
                   />
                 </div>
               ))}
@@ -605,7 +605,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
                   <Trash2 size={15}/> Delete
                 </button>
                 <button type="submit" disabled={editSaving}
-                  className="flex-[2] bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+                  className="flex-[2] bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
                   {editSaving && <Loader2 size={16} className="animate-spin"/>}
                   Save Changes
                 </button>
@@ -661,7 +661,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
                   {LOGIN_ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
                 <button onClick={handleCreateLogin} disabled={creating}
-                  className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+                  className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
                   {creating && <Loader2 size={16} className="animate-spin"/>}
                   Create Login
                 </button>
@@ -685,12 +685,12 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
                     navigator.clipboard.writeText(`Email: ${result.email}\nPassword: ${result.tempPassword}`)
                     setCopied(true)
                   }}
-                  className="w-full bg-white border border-[#E2E8F4] text-[#1A3A6B] font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-2">
+                  className="w-full bg-white border border-[#E2E8F4] text-[#075290] font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-2">
                   {copied ? <Check size={15}/> : <Copy size={15}/>}
                   {copied ? 'Copied!' : 'Copy credentials'}
                 </button>
                 <button onClick={closeLoginModal}
-                  className="w-full bg-[#1A3A6B] text-white font-bold py-3.5 rounded-xl text-sm">
+                  className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm">
                   Done
                 </button>
               </>
