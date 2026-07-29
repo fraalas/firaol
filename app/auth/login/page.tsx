@@ -52,17 +52,22 @@ export default function LoginPage() {
     <div className="min-h-screen grid md:grid-cols-2 bg-[#F5F7FB]">
 
       {/* Left branding panel — desktop only */}
-      <div className="hidden md:flex relative overflow-hidden bg-[#075290] flex-col items-center justify-center px-12 py-16">
+      <div className="hidden md:flex relative overflow-hidden flex-col items-center justify-center px-12 py-16"
+        style={{ background: 'linear-gradient(160deg, #0F2647 0%, #1A3A6B 55%, #1A3A6B 100%)' }}>
 
-        {/* Geometric pattern texture — subtle, behind everything */}
+        {/* Geometric pattern texture, softened with a vignette so it recedes */}
         <div
-          className="absolute inset-0 z-0 pointer-events-none opacity-[0.08]"
+          className="absolute inset-0 z-0 pointer-events-none opacity-[0.07]"
           style={{
             backgroundImage: "url('/pattern.png')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
           }}
+        />
+        <div
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse at 50% 40%, transparent 0%, rgba(15,38,71,0.55) 100%)' }}
         />
 
         {/* Floating background shapes — behind everything, never overlapping text */}
@@ -72,15 +77,17 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 flex flex-col items-center">
-          <img src="/sanchos-logo.png" alt="Sanchos Real Estate"
-            className="h-28 w-auto mb-10 animate-fade-in-up" style={{ animationDelay: '0ms' }} draggable={false}/>
-          <h2 className="text-white text-3xl font-bold text-center leading-tight max-w-md animate-fade-in-up"
+          <h2 className="font-display text-white text-4xl font-semibold text-center leading-tight max-w-md animate-fade-in-up"
             style={{ animationDelay: '120ms' }}>
-            Sanchos Real Estate ERP System
+            Sanchos Real Estate
           </h2>
-          <p className="text-white/60 text-base mt-4 text-center max-w-sm animate-fade-in-up"
+
+          {/* Signature element: a gold keyline that draws itself in, like a drafted property line */}
+          <div className="mt-4 mb-5 h-[2px] w-0 bg-[#B8912F] animate-draw-line" style={{ animationDelay: '420ms' }} />
+
+          <p className="text-white/60 text-base text-center max-w-sm animate-fade-in-up font-body"
             style={{ animationDelay: '240ms' }}>
-            Manage leads properties attendance and your team — all from one place.
+            One place to manage your listings, leads, and team.
           </p>
         </div>
       </div>
@@ -88,59 +95,64 @@ export default function LoginPage() {
       {/* Right form panel */}
       <div className="flex items-center justify-center p-6 md:p-10">
         <div className="w-full max-w-sm animate-fade-in-up" style={{ animationDelay: '80ms' }}>
-          <div className="flex flex-col items-center mb-6 md:hidden">
-            <img src="/sanchos-logo.png" alt="Sanchos Real Estate" className="h-20 w-auto mb-2" draggable={false}/>
+          <div className="flex flex-col items-center mb-6">
+            <img src="/sanchos-logo.png" alt="Sanchos Real Estate" className="h-16 md:h-20 w-auto mb-2" draggable={false}/>
           </div>
 
           <div className="bg-white rounded-3xl shadow-md border border-[#E2E8F4] p-8">
             <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-[#0D1B3E]">Welcome Back!</h1>
-              <p className="text-sm text-[#9AAAC8] mt-1">Login to your account</p>
+              <h1 className="font-display text-3xl font-semibold text-[#0D1B3E]">Welcome back</h1>
+              <p className="text-sm text-[#9AAAC8] mt-1.5 font-body">Sign in to manage your listings, leads, and team</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
-              {error && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 animate-shake">{error}</div>}
-              {msg   && <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-sm text-blue-700 animate-fade-in-up">{msg}</div>}
+              {error && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 animate-shake font-body">{error}</div>}
+              {msg   && <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-sm text-blue-700 animate-fade-in-up font-body">{msg}</div>}
 
-              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#075290] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
+              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#1A3A6B] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
                 <Mail size={18} className="text-[#9AAAC8] flex-shrink-0"/>
                 <input type="email" placeholder="Email address" value={email}
                   onChange={e => setEmail(e.target.value)} required
-                  className="flex-1 bg-transparent text-sm text-[#0D1B3E] outline-none placeholder:text-[#9AAAC8]"/>
+                  className="flex-1 bg-transparent text-sm text-[#0D1B3E] outline-none placeholder:text-[#9AAAC8] font-body"/>
               </div>
 
-              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#075290] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
+              <div className="flex items-center gap-3 border border-[#E2E8F4] rounded-xl px-4 py-3.5 bg-[#FAFBFE] transition-all duration-200 focus-within:border-[#1A3A6B] focus-within:shadow-[0_0_0_3px_rgba(26,58,107,0.08)]">
                 <Lock size={18} className="text-[#9AAAC8] flex-shrink-0"/>
                 <input type={showPw ? 'text' : 'password'} placeholder="Password" value={password}
                   onChange={e => setPassword(e.target.value)} required
-                  className="flex-1 bg-transparent text-sm text-[#0D1B3E] outline-none placeholder:text-[#9AAAC8]"/>
+                  className="flex-1 bg-transparent text-sm text-[#0D1B3E] outline-none placeholder:text-[#9AAAC8] font-body"/>
                 <button type="button" onClick={() => setShowPw(!showPw)} className="text-[#9AAAC8] transition-transform hover:scale-110">
                   {showPw ? <EyeOff size={16}/> : <Eye size={16}/>}
                 </button>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between font-body">
                 <label className="flex items-center gap-2 text-sm text-[#4A5880]">
-                  <input type="checkbox" className="rounded accent-[#075290]"/> Remember me
+                  <input type="checkbox" className="rounded accent-[#1A3A6B]"/> Remember me
                 </label>
-                <Link href="/auth/forgot-password" className="text-sm text-[#1F4FA8] font-semibold hover:underline">Forgot Password?</Link>
+                <Link href="/auth/forgot-password" className="text-sm text-[#1F4FA8] font-semibold hover:underline">Forgot password?</Link>
               </div>
 
               <button type="submit" disabled={loading}
-                className="w-full bg-[#075290] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-[#1F4FA8] hover:scale-[1.01] active:scale-[0.99] transition-all duration-150">
+                className="w-full bg-[#1A3A6B] text-white font-bold py-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-[#1F4FA8] hover:scale-[1.01] active:scale-[0.99] transition-all duration-150 font-body">
                 {loading && <Loader2 size={16} className="animate-spin"/>}
-                {loading ? 'Logging in...' : 'Login'}
+                {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </form>
           </div>
 
-          <p className="text-center text-xs text-[#9AAAC8] mt-6">
-            Sanchos Real Estate Erp System v2.0.0
+          <p className="text-center text-xs text-[#9AAAC8] mt-6 font-body">
+            Sanchos Real Estate ERP System v2.0.0
           </p>
         </div>
       </div>
 
       <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+        .font-display { font-family: 'Fraunces', Georgia, serif; }
+        .font-body { font-family: 'Inter', -apple-system, sans-serif; }
+
         @keyframes fade-in-up {
           from { opacity: 0; transform: translateY(14px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -148,6 +160,14 @@ export default function LoginPage() {
         .animate-fade-in-up {
           opacity: 0;
           animation: fade-in-up 0.6s ease-out forwards;
+        }
+
+        @keyframes draw-line {
+          from { width: 0; }
+          to   { width: 64px; }
+        }
+        .animate-draw-line {
+          animation: draw-line 0.7s ease-out forwards;
         }
 
         @keyframes float-slow {
@@ -169,6 +189,14 @@ export default function LoginPage() {
           80%      { transform: translateX(4px); }
         }
         .animate-shake { animation: shake 0.4s ease-in-out; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-fade-in-up, .animate-draw-line, .animate-float-slow, .animate-float-slower, .animate-shake {
+            animation: none !important;
+            opacity: 1 !important;
+            width: 64px !important;
+          }
+        }
       `}</style>
     </div>
   )
