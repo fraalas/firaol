@@ -57,7 +57,7 @@ export default function LoginPage() {
 
         {/* Geometric pattern texture, softened with a vignette so it recedes */}
         <div
-          className="absolute inset-0 z-0 pointer-events-none opacity-[0.07]"
+          className="absolute inset-0 z-0 pointer-events-none opacity-[0.16]"
           style={{
             backgroundImage: "url('/pattern.png')",
             backgroundSize: 'cover',
