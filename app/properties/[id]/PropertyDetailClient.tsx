@@ -62,7 +62,7 @@ export function PropertyDetailClient({ property: initial, currentUserId, userRol
     <div className="flex flex-col h-screen bg-[#F5F7FB] max-w-sm mx-auto relative overflow-hidden">
 
       {/* Hero image area */}
-      <div className="bg-gradient-to-br from-[#1A3A6B] to-[#2E6DD4] relative flex-shrink-0">
+      <div className="bg-gradient-to-br from-[#075290] to-[#2E6DD4] relative flex-shrink-0">
 
         {/* Real images carousel or placeholder */}
         {images.length > 0 ? (
@@ -104,7 +104,7 @@ export function PropertyDetailClient({ property: initial, currentUserId, userRol
                     <X size={16}/>
                   </button>
                   <button onClick={handleSave} disabled={saving}
-                    className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1A3A6B] disabled:opacity-60">
+                    className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#075290] disabled:opacity-60">
                     {saving ? <Loader2 size={16} className="animate-spin"/> : <Check size={16}/>}
                   </button>
                 </>
@@ -163,7 +163,7 @@ export function PropertyDetailClient({ property: initial, currentUserId, userRol
           {/* Title */}
           {editing ? (
             <input value={form.title} onChange={e=>setForm(p=>({...p,title:e.target.value}))}
-              className="text-lg font-bold text-[#0D1B3E] border-b-2 border-[#1A3A6B] outline-none w-full pb-1"/>
+              className="text-lg font-bold text-[#0D1B3E] border-b-2 border-[#075290] outline-none w-full pb-1"/>
           ) : (
             <h1 className="text-lg font-bold text-[#0D1B3E]">{prop.title}</h1>
           )}
@@ -197,7 +197,7 @@ export function PropertyDetailClient({ property: initial, currentUserId, userRol
                 {editing ? (
                   <input type="number" value={(form as any)[s.key]}
                     onChange={e => setForm(p => ({...p, [s.key]: e.target.value}))}
-                    className="w-full text-center text-base font-bold text-[#0D1B3E] bg-transparent outline-none border-b border-[#1A3A6B]"/>
+                    className="w-full text-center text-base font-bold text-[#0D1B3E] bg-transparent outline-none border-b border-[#075290]"/>
                 ) : (
                   <div className="text-base font-bold text-[#0D1B3E]">{s.val ?? '—'}</div>
                 )}

@@ -192,7 +192,7 @@ export default function LeadDetailPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-screen bg-[#F5F7FB]">
-      <div className="w-10 h-10 border-4 border-[#1A3A6B] border-t-transparent rounded-full animate-spin"/>
+      <div className="w-10 h-10 border-4 border-[#075290] border-t-transparent rounded-full animate-spin"/>
     </div>
   )
 
@@ -206,7 +206,7 @@ export default function LeadDetailPage() {
       <div className="h-full overflow-y-auto pb-8">
 
         {/* Hero */}
-        <div className="bg-[#1A3A6B] px-6 py-6">
+        <div className="bg-[#075290] px-6 py-6">
           <div className="flex items-center justify-between mb-4">
             <button onClick={() => router.back()}
               className="flex items-center gap-2 text-white/70 hover:text-white text-sm">
@@ -220,7 +220,7 @@ export default function LeadDetailPage() {
                     <X size={13}/>
                   </button>
                   <button onClick={handleSave} disabled={saving}
-                    className="bg-white rounded-lg px-3 py-1.5 text-[#1A3A6B] text-xs font-bold flex items-center gap-1">
+                    className="bg-white rounded-lg px-3 py-1.5 text-[#075290] text-xs font-bold flex items-center gap-1">
                     {saving ? <Loader2 size={13} className="animate-spin"/> : <Check size={13}/>} Save
                   </button>
                 </>
@@ -262,7 +262,7 @@ export default function LeadDetailPage() {
                   <div key={s} className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${
                     i <= pipelineIdx ? 'bg-white border-white' : 'border-white/30'
                   }`}>
-                    {i <= pipelineIdx && <Check size={12} className="text-[#1A3A6B]"/>}
+                    {i <= pipelineIdx && <Check size={12} className="text-[#075290]"/>}
                   </div>
                 ))}
               </div>
@@ -279,11 +279,11 @@ export default function LeadDetailPage() {
           {(['details','activities','notes'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`flex-1 py-3 text-xs font-bold capitalize border-b-2 transition-colors ${
-                tab === t ? 'text-[#1A3A6B] border-[#1A3A6B]' : 'text-[#9AAAC8] border-transparent'
+                tab === t ? 'text-[#075290] border-[#075290]' : 'text-[#9AAAC8] border-transparent'
               }`}>
               {t}
               {t === 'activities' && activities.length > 0 &&
-                <span className="ml-1 bg-[#1A3A6B] text-white text-[9px] px-1.5 py-0.5 rounded-full">
+                <span className="ml-1 bg-[#075290] text-white text-[9px] px-1.5 py-0.5 rounded-full">
                   {activities.length}
                 </span>
               }
@@ -311,7 +311,7 @@ export default function LeadDetailPage() {
                     {editing ? (
                       <input type={f.type} value={form[f.key]}
                         onChange={e => setForm((p: any) => ({ ...p, [f.key]: e.target.value }))}
-                        className="text-sm text-[#0D1B3E] border-b border-[#1A3A6B] outline-none w-full bg-transparent mt-0.5"/>
+                        className="text-sm text-[#0D1B3E] border-b border-[#075290] outline-none w-full bg-transparent mt-0.5"/>
                     ) : (
                       <div className="text-sm text-[#0D1B3E] truncate">
                         {f.key === 'budget' && lead[f.key] ? `$${Number(lead[f.key]).toLocaleString()}` : lead[f.key] || '—'}
@@ -326,7 +326,7 @@ export default function LeadDetailPage() {
               <div className="text-[10px] text-[#9AAAC8] uppercase font-semibold tracking-wider mb-1">Source</div>
               {editing ? (
                 <select value={form.source} onChange={e => setForm((p: any) => ({ ...p, source: e.target.value }))}
-                  className="text-sm text-[#0D1B3E] outline-none bg-transparent w-full border-b border-[#1A3A6B]">
+                  className="text-sm text-[#0D1B3E] outline-none bg-transparent w-full border-b border-[#075290]">
                   {['referral','website','social','walk_in','cold_call','other'].map(s => (
                     <option key={s} value={s}>{s.replace('_',' ')}</option>
                   ))}
@@ -364,7 +364,7 @@ export default function LeadDetailPage() {
         {tab === 'activities' && (
           <div className="p-6 max-w-2xl">
             <button onClick={() => setShowAct(true)}
-              className="w-full bg-[#1A3A6B] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-4">
+              className="w-full bg-[#075290] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 mb-4">
               <Plus size={16}/> Schedule Activity
             </button>
             {activities.length === 0 ? (
@@ -415,12 +415,12 @@ export default function LeadDetailPage() {
                 rows={8}
                 placeholder="Add notes about this lead..."
                 className={`w-full text-sm text-[#0D1B3E] outline-none resize-none leading-relaxed placeholder:text-[#9AAAC8] ${
-                  editing ? 'border border-[#1A3A6B] rounded-xl p-3 bg-[#FAFBFE]' : 'bg-transparent'
+                  editing ? 'border border-[#075290] rounded-xl p-3 bg-[#FAFBFE]' : 'bg-transparent'
                 }`}
               />
               {editing && (
                 <button onClick={handleSave} disabled={saving}
-                  className="mt-3 w-full bg-[#1A3A6B] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
+                  className="mt-3 w-full bg-[#075290] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
                   {saving ? <Loader2 size={15} className="animate-spin"/> : <Check size={15}/>} Save Notes
                 </button>
               )}
@@ -441,11 +441,11 @@ export default function LeadDetailPage() {
               {STAGES.map(s => (
                 <button key={s.key} onClick={() => handleStageChange(s.key)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
-                    lead.stage === s.key ? 'border-[#1A3A6B] bg-[#F5F7FB]' : 'border-[#E2E8F4]'
+                    lead.stage === s.key ? 'border-[#075290] bg-[#F5F7FB]' : 'border-[#E2E8F4]'
                   }`}>
                   <div className="w-3 h-3 rounded-full" style={{ background: s.color }}/>
                   <span className="text-sm font-semibold text-[#0D1B3E]">{s.label}</span>
-                  {lead.stage === s.key && <Check size={16} className="ml-auto text-[#1A3A6B]"/>}
+                  {lead.stage === s.key && <Check size={16} className="ml-auto text-[#075290]"/>}
                 </button>
               ))}
             </div>
@@ -476,7 +476,7 @@ export default function LeadDetailPage() {
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Title *</label>
                 <input required value={actForm.title}
                   onChange={e => setActForm(p => ({ ...p, title: e.target.value }))}
-                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"
+                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#075290] bg-[#FAFBFE]"
                   placeholder={`Call with ${lead.full_name}`}/>
               </div>
               <div>
@@ -492,15 +492,15 @@ export default function LeadDetailPage() {
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Date & Time *</label>
                 <input required type="datetime-local" value={actForm.scheduled_at}
                   onChange={e => setActForm(p => ({ ...p, scheduled_at: e.target.value }))}
-                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#1A3A6B] bg-[#FAFBFE]"/>
+                  className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#075290] bg-[#FAFBFE]"/>
               </div>
               <div>
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Notes</label>
                 <textarea value={actForm.notes} onChange={e => setActForm(p => ({ ...p, notes: e.target.value }))}
-                  rows={2} className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#1A3A6B] bg-[#FAFBFE] resize-none"/>
+                  rows={2} className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#075290] bg-[#FAFBFE] resize-none"/>
               </div>
               <button type="submit" disabled={actSaving}
-                className="w-full bg-[#1A3A6B] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+                className="w-full bg-[#075290] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-60">
                 {actSaving ? <Loader2 size={16} className="animate-spin"/> : <Plus size={16}/>} Save Activity
               </button>
             </form>

@@ -85,7 +85,7 @@ export async function exportLeadsToPDF(leads: Lead[], agentName = 'Sanchos Real 
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
 
   // Header
-  doc.setFillColor(26, 58, 107) // #075290
+  doc.setFillColor(7, 82, 144) // #075290
   doc.rect(0, 0, 297, 22, 'F')
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(14)
@@ -96,7 +96,7 @@ export async function exportLeadsToPDF(leads: Lead[], agentName = 'Sanchos Real 
   doc.text('Leads Report — ' + new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }), 14, 17)
 
   // Stats row
-  doc.setTextColor(26, 58, 107)
+  doc.setTextColor(7, 82, 144)
   doc.setFontSize(10)
   doc.setFont('helvetica', 'bold')
   const closedDeals   = leads.filter(l => l.stage === 'closed').length
@@ -116,7 +116,7 @@ export async function exportLeadsToPDF(leads: Lead[], agentName = 'Sanchos Real 
     doc.setTextColor(120, 120, 120)
     doc.text(label, x, statY + 6)
     doc.setFont('helvetica', 'bold')
-    doc.setTextColor(26, 58, 107)
+    doc.setTextColor(7, 82, 144)
   })
 
   // Table
@@ -133,7 +133,7 @@ export async function exportLeadsToPDF(leads: Lead[], agentName = 'Sanchos Real 
       new Date(l.created_at).toLocaleDateString(),
     ]),
     headStyles: {
-      fillColor: [26, 58, 107],
+      fillColor: [7, 82, 144],
       textColor: 255,
       fontStyle: 'bold',
       fontSize: 9,

@@ -338,7 +338,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
     const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
     doc.setFontSize(16)
-    doc.setTextColor(26, 58, 107) // #075290
+    doc.setTextColor(7, 82, 144) // #075290
     doc.text('Sanchos Real Estate — Employee Report', 14, 16)
     doc.setFontSize(10)
     doc.setTextColor(120, 120, 120)
@@ -357,7 +357,7 @@ export function EmployeesClient({ employees: initial, companyId }: Props) {
         e.hire_date ?? '',
         e.status ?? '',
       ]),
-      headStyles: { fillColor: [26, 58, 107], textColor: 255, fontStyle: 'bold' },
+      headStyles: { fillColor: [7, 82, 144], textColor: 255, fontStyle: 'bold' },
       alternateRowStyles: { fillColor: [247, 249, 253] },
       styles: { fontSize: 9, cellPadding: 3 },
     })

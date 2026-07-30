@@ -140,7 +140,7 @@ export function TeamClient({ agents, companyId, onChange }: Props) {
             ) : (
               <>
                 <p className="text-sm text-[#4A5880] mb-4">
-                  Account created. Share these credentials with <span className="font-semibold">{form.fullName}</span> — this password won't be shown again.
+                  Account created. Share these credentials with <span className="font-semibold">{form.fullName}</span> â€” this password won't be shown again.
                 </p>
                 <div className="bg-[#F5F7FB] rounded-xl p-4 space-y-2 mb-4">
                   <div>
