@@ -55,19 +55,12 @@ export default function LoginPage() {
       <div className="hidden md:flex relative overflow-hidden flex-col items-center justify-center px-12 py-16"
         style={{ background: 'linear-gradient(160deg, #0F2647 0%, #075290 55%, #075290 100%)' }}>
 
-        {/* Geometric pattern texture — now prominent and clearly visible */}
-        <div
-          className="absolute inset-0 z-0 pointer-events-none opacity-[0.4]"
-          style={{
-            backgroundImage: "url('/pattern.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        />
-        <div
-          className="absolute inset-0 z-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 50% 40%, transparent 0%, rgba(15,38,71,0.25) 100%)' }}
+        {/* Geometric pattern texture — plain img tag, inline styles, no Tailwind arbitrary values */}
+        <img
+          src="/pattern.png"
+          alt=""
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{ objectFit: 'cover', opacity: 0.5, zIndex: 0 }}
         />
 
         {/* Floating background shapes — behind everything, never overlapping text */}
