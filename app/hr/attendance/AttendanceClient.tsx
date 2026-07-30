@@ -1,8 +1,11 @@
 'use client'
 import { useState } from 'react'
-import { Search, Plus, Loader2, X } from 'lucide-react'
+import { Search, Plus, Loader2, X, FileSpreadsheet, FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getEATDateString, formatEATTime, eatDateTimeToISO } from '@/lib/timezone'
+import * as XLSX from 'xlsx'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const STATUS_FILTERS = [
   { key: 'all',      label: 'All' },
@@ -78,6 +81,63 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
     setSaving(false)
   }
 
+  // ── Export to Excel ────────────────────────────────────────────────────────
+
+  function handleExportExcel() {
+    const rows = filtered.map(r => ({
+      'Employee':   empMap[r.employee_id] ?? 'Unknown',
+      'Date':       r.date,
+      'Check In':   r.check_in ? formatEATTime(r.check_in) : '',
+      'Check Out':  r.check_out ? formatEATTime(r.check_out) : '',
+      'Work Hours': r.work_hours ?? '',
+      'Status':     STATUS_BADGE[r.status]?.label ?? r.status,
+      'Notes':      r.notes ?? '',
+    }))
+    const ws = XLSX.utils.json_to_sheet(rows)
+    ws['!cols'] = [
+      { wch: 22 }, { wch: 12 }, { wch: 12 }, { wch: 12 },
+      { wch: 12 }, { wch: 12 }, { wch: 24 },
+    ]
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Attendance')
+    const dateStr = new Date().toISOString().slice(0, 10)
+    XLSX.writeFile(wb, `Sanchos_Attendance_${dateStr}.xlsx`)
+  }
+
+  // ── Export to PDF ──────────────────────────────────────────────────────────
+
+  function handleExportPDF() {
+    const doc = new jsPDF({ orientation: 'landscape' })
+    const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+
+    doc.setFontSize(16)
+    doc.setTextColor(7, 82, 144) // #075290
+    doc.text('Sanchos Real Estate — Attendance Report', 14, 16)
+    doc.setFontSize(10)
+    doc.setTextColor(120, 120, 120)
+    doc.text(`Generated ${dateStr}  ·  ${filtered.length} records`, 14, 22)
+
+    autoTable(doc, {
+      startY: 28,
+      head: [['Employee', 'Date', 'Check In', 'Check Out', 'Work Hours', 'Status', 'Notes']],
+      body: filtered.map(r => [
+        empMap[r.employee_id] ?? 'Unknown',
+        r.date,
+        r.check_in ? formatEATTime(r.check_in) : '',
+        r.check_out ? formatEATTime(r.check_out) : '',
+        r.work_hours ? `${r.work_hours}h` : '',
+        STATUS_BADGE[r.status]?.label ?? r.status,
+        r.notes ?? '',
+      ]),
+      headStyles: { fillColor: [7, 82, 144], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [247, 249, 253] },
+      styles: { fontSize: 9, cellPadding: 3 },
+    })
+
+    const dateFile = new Date().toISOString().slice(0, 10)
+    doc.save(`Sanchos_Attendance_${dateFile}.pdf`)
+  }
+
   return (
     <>
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
@@ -91,6 +151,18 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
             disabled={employees.length === 0}
             className="bg-[#075290] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold disabled:opacity-40">
             <Plus size={16}/> Add
+          </button>
+        </div>
+
+        {/* Export toolbar */}
+        <div className="flex gap-2 mb-3">
+          <button onClick={handleExportExcel}
+            className="flex-1 bg-white border border-[#E2E8F4] rounded-xl px-2 py-2 text-xs font-semibold text-[#4A5880] flex items-center justify-center gap-1.5">
+            <FileSpreadsheet size={14}/> Excel
+          </button>
+          <button onClick={handleExportPDF}
+            className="flex-1 bg-white border border-[#E2E8F4] rounded-xl px-2 py-2 text-xs font-semibold text-[#4A5880] flex items-center justify-center gap-1.5">
+            <FileText size={14}/> PDF
           </button>
         </div>
 
