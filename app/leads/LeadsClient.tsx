@@ -1,9 +1,10 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, Plus, Loader2, X, ChevronRight } from 'lucide-react'
+import { Search, Plus, Loader2, X, ChevronRight, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { Lead, LeadStage, LeadSource } from '@/types/database'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 const STAGES: { key: LeadStage | 'all'; label: string }[] = [
   { key: 'all',            label: 'All' },
@@ -95,13 +96,13 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
     <>
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
         <div className="flex gap-2 mb-3">
-          <div className="flex-1 flex items-center gap-2 bg-white border border-[#E2E8F4] rounded-xl px-3 py-2.5">
+          <div className="flex-1 flex items-center gap-2 bg-white border border-[#E2E8F4] rounded-xl px-3 py-2.5 transition-shadow focus-within:shadow-[0_0_0_3px_rgba(7,82,144,0.08)] focus-within:border-[#075290]">
             <Search size={16} className="text-[#9AAAC8]" />
             <input className="flex-1 text-sm outline-none text-[#0D1B3E] placeholder:text-[#9AAAC8] bg-transparent"
               placeholder="Search leads..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <button onClick={() => setShowAdd(true)}
-            className="bg-[#075290] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold">
+            className="bg-[#075290] text-white rounded-xl px-3 flex items-center gap-1 text-xs font-bold active:scale-95 hover:bg-[#1F4FA8] transition-all">
             <Plus size={16}/> Add
           </button>
         </div>
@@ -109,10 +110,10 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
         <div className="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar">
           {STAGES.map(s => (
             <button key={s.key} onClick={() => setFilter(s.key)}
-              className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+              className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all active:scale-95 ${
                 filter === s.key
                   ? 'bg-[#075290] text-white border-[#075290]'
-                  : 'bg-white text-[#4A5880] border-[#E2E8F4]'
+                  : 'bg-white text-[#4A5880] border-[#E2E8F4] hover:border-[#075290]/40'
               }`}>
               {s.label}
               {s.key !== 'all' && (
@@ -128,18 +129,20 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
 
         <div className="space-y-2">
           {filtered.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-sm text-[#9AAAC8]">No leads found.</p>
-              <button onClick={() => setShowAdd(true)}
-                className="mt-3 text-xs text-[#1F4FA8] font-semibold">+ Add your first lead</button>
-            </div>
+            <EmptyState
+              icon={Users}
+              title={search || filter !== 'all' ? 'No leads match your filters' : 'No leads yet'}
+              subtitle={search || filter !== 'all' ? 'Try a different search or stage.' : 'Add your first lead to start building your pipeline.'}
+              action={!search && filter === 'all' ? { label: '+ Add your first lead', onClick: () => setShowAdd(true) } : undefined}
+            />
           )}
           {filtered.map((lead, i) => {
             const badge = BADGE[lead.stage]
             const ci    = i % BG.length
             return (
               <button key={lead.id} onClick={() => router.push(`/leads/${lead.id}`)}
-                className="w-full bg-white rounded-2xl border border-[#E2E8F4] px-4 py-3 flex items-center gap-3 hover:bg-[#FAFBFE] transition-all text-left">
+                className="w-full bg-white rounded-2xl border border-[#E2E8F4] px-4 py-3 flex items-center gap-3 hover:border-[#075290]/30 hover:shadow-sm active:scale-[0.99] transition-all text-left animate-row-in"
+                style={{ animationDelay: `${Math.min(i, 8) * 30}ms` }}>
                 <div className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                   style={{ background: BG[ci], color: TC[ci] }}>
                   {initials(lead.full_name)}
@@ -188,7 +191,7 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
                     placeholder={(f as any).placeholder ?? ''}
                     value={(form as any)[f.key]}
                     onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE]"
+                    className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#0D1B3E] outline-none focus:border-[#075290] bg-[#FAFBFE] transition-colors"
                   />
                 </div>
               ))}
@@ -213,7 +216,7 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
                 </select>
               </div>
               <button type="submit" disabled={saving}
-                className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60">
+                className="w-full bg-[#075290] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-60 active:scale-[0.99] transition-transform">
                 {saving && <Loader2 size={16} className="animate-spin"/>}
                 Save Lead
               </button>
@@ -221,6 +224,19 @@ export function LeadsClient({ leads: initial, agentId, companyId }: Props) {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes row-in {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-row-in {
+          animation: row-in 0.3s ease-out backwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-row-in { animation: none; }
+        }
+      `}</style>
     </>
   )
 }
