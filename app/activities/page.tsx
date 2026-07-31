@@ -10,6 +10,7 @@ export default function ActivitiesPage() {
   const router   = useRouter()
   const [activities, setActivities] = useState<any[]>([])
   const [agentId,    setAgentId]    = useState('')
+  const [companyId,  setCompanyId]  = useState('')
   const [loading,    setLoading]    = useState(true)
 
   useEffect(() => {
@@ -17,6 +18,10 @@ export default function ActivitiesPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.replace('/auth/login'); return }
       setAgentId(user.id)
+
+      const { data: profile } = await supabase
+        .from('profiles').select('company_id').eq('id', user.id).single()
+      setCompanyId(profile?.company_id ?? '')
 
       const { data } = await supabase
         .from('activities')
@@ -37,7 +42,7 @@ export default function ActivitiesPage() {
 
   return (
     <AppLayout title="Activities" subtitle="Upcoming tasks">
-      <ActivitiesClient activities={activities} agentId={agentId} />
+      <ActivitiesClient activities={activities} agentId={agentId} companyId={companyId} />
     </AppLayout>
   )
 }
