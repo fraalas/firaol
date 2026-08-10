@@ -40,11 +40,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const admin = createAdminClient()
 
-    if (isSalesManager && !isFullAccess) {
+    const isDirectCreate = !body.employeeId && body.fullName && body.email
+
+    if (isDirectCreate) {
       const { fullName, email, phone } = body
-      if (!fullName || !email) {
-        return NextResponse.json({ error: 'fullName and email are required' }, { status: 400 })
-      }
+      const role = isSalesManager && !isFullAccess ? 'agent' : (body.role || 'agent')
 
       const tempPassword = generateTempPassword()
 
@@ -52,23 +52,23 @@ export async function POST(req: NextRequest) {
         email, password: tempPassword, email_confirm: true,
       })
       if (createError || !created.user) {
-        console.error('CREATE_USER_ERROR (sales manager path):', createError)
+        console.error('CREATE_USER_ERROR (direct create path):', createError)
         return NextResponse.json({ error: createError?.message || 'Failed to create login (see server logs)' }, { status: 400 })
       }
 
       const { error: profileError } = await admin.from('profiles').update({
         full_name: fullName,
         phone: phone || null,
-        role: 'agent',
+        role,
         company_id: callerProfile.company_id,
-        department: 'Sales',
-        position: 'Sales Agent',
+        department: role === 'agent' ? 'Sales' : null,
+        position: role === 'agent' ? 'Sales Agent' : null,
         status: 'active',
         must_change_password: true,
       }).eq('id', created.user.id)
 
       if (profileError) {
-        console.error('PROFILE_UPDATE_ERROR (sales manager path):', profileError)
+        console.error('PROFILE_UPDATE_ERROR (direct create path):', profileError)
         await admin.auth.admin.deleteUser(created.user.id)
         return NextResponse.json({ error: profileError.message || 'Profile update failed (see server logs)' }, { status: 400 })
       }
@@ -79,12 +79,16 @@ export async function POST(req: NextRequest) {
         full_name: fullName,
         email,
         phone: phone || null,
-        department: 'Sales',
-        job_title: 'Sales Agent',
+        department: role === 'agent' ? 'Sales' : null,
+        job_title: role === 'agent' ? 'Sales Agent' : null,
         status: 'active',
       })
 
       return NextResponse.json({ email, tempPassword })
+    }
+
+    if (!isFullAccess) {
+      return NextResponse.json({ error: 'You do not have permission to do this' }, { status: 403 })
     }
 
     const { employeeId, role } = body
