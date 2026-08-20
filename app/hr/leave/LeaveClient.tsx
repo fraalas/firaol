@@ -1,9 +1,16 @@
-'use client'
+﻿'use client'
 import { useState } from 'react'
 import { Plus, Loader2, X, Check, XCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-const LEAVE_TYPES = ['Annual', 'Sick', 'Personal', 'Unpaid', 'Maternity', 'Paternity', 'Other']
+const LEAVE_TYPES = [
+  { value: 'annual',    label: 'Annual' },
+  { value: 'sick',      label: 'Sick' },
+  { value: 'emergency', label: 'Emergency' },
+  { value: 'maternity', label: 'Maternity' },
+  { value: 'unpaid',    label: 'Unpaid' },
+  { value: 'other',     label: 'Other' },
+]
 
 const STATUS_BADGE: Record<string, { bg: string; text: string; label: string }> = {
   pending:  { bg: '#FFFBEB', text: '#92400E', label: 'Pending' },
@@ -36,21 +43,44 @@ export function LeaveClient({
   const [showAdd, setShowAdd] = useState(false)
   const [saving,  setSaving]  = useState(false)
   const [busyId,  setBusyId]  = useState<string | null>(null)
+  const [addError, setAddError] = useState('')
   const [form, setForm] = useState({
-    leave_type: LEAVE_TYPES[0], start_date: '', end_date: '', reason: '',
+    leave_type: LEAVE_TYPES[0].value, start_date: '', end_date: '', reason: '',
   })
 
   const empMap = Object.fromEntries(employees.map(e => [e.id, e.full_name]))
+  const typeLabel = (value: string) =>
+    LEAVE_TYPES.find(t => t.value === value)?.label ?? (value.charAt(0).toUpperCase() + value.slice(1))
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault()
-    if (!employee) return
+    setAddError('')
+
+    if (!employee) {
+      setAddError('No employee record is linked to your account, so this request cannot be submitted. Contact HR to get your account linked to an employee record.')
+      return
+    }
+
+    if (!companyId) {
+      setAddError('Could not determine your company. Try refreshing the page.')
+      return
+    }
+
     setSaving(true)
 
+    const ALLOWED_TYPES = ['annual', 'sick', 'emergency', 'maternity', 'unpaid', 'other']
+    const normalizedType = ALLOWED_TYPES.includes(form.leave_type.toLowerCase())
+      ? form.leave_type.toLowerCase()
+      : 'other'
+
+    const days = form.start_date && form.end_date ? daysBetween(form.start_date, form.end_date) : null
+
+    // 'days' is a generated column in the database — computed automatically
+    // from start_date/end_date. Do NOT send it in the insert.
     const { data, error } = await supabase.from('leave_requests').insert({
       company_id:  companyId,
       employee_id: employee.id,
-      leave_type:  form.leave_type,
+      leave_type:  normalizedType,
       start_date:  form.start_date,
       end_date:    form.end_date,
       reason:      form.reason || null,
@@ -58,13 +88,17 @@ export function LeaveClient({
     }).select().single()
 
     if (error) {
-      alert('Error: ' + error.message)
+      setAddError(
+        'Could not save: ' + error.message +
+        (error.code ? ' (code ' + error.code + ')' : '') +
+        ' | Sent leave_type: "' + normalizedType + '"'
+      )
       setSaving(false)
       return
     }
 
     setShowAdd(false)
-    setForm({ leave_type: LEAVE_TYPES[0], start_date: '', end_date: '', reason: '' })
+    setForm({ leave_type: LEAVE_TYPES[0].value, start_date: '', end_date: '', reason: '' })
     setSaving(false)
     onChange()
   }
@@ -127,13 +161,13 @@ export function LeaveClient({
               <div key={r.id} className="bg-white rounded-2xl border border-[#E2E8F4] px-4 py-3">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-sm font-semibold text-[#0D1B3E]">
-                    {tab === 'all' ? (empMap[r.employee_id] ?? 'Unknown') : r.leave_type}
+                    {tab === 'all' ? (empMap[r.employee_id] ?? 'Unknown') : typeLabel(r.leave_type)}
                   </span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
                     style={{ background: badge.bg, color: badge.text }}>{badge.label}</span>
                 </div>
                 <div className="text-xs text-[#9AAAC8] mb-1">
-                  {tab === 'all' && `${r.leave_type} · `}
+                  {tab === 'all' && `${typeLabel(r.leave_type)} · `}
                   {r.start_date} → {r.end_date} {r.days ? `(${r.days}d)` : ''}
                 </div>
                 {r.reason && <div className="text-xs text-[#4A5880] mt-1">{r.reason}</div>}
@@ -160,15 +194,20 @@ export function LeaveClient({
           <div className="bg-white w-full rounded-t-3xl p-6 pb-8 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <h3 className="font-bold text-[#0D1B3E] text-base">Request Leave</h3>
-              <button onClick={() => setShowAdd(false)} className="text-[#9AAAC8]"><X size={20}/></button>
+              <button onClick={() => { setShowAdd(false); setAddError('') }} className="text-[#9AAAC8]"><X size={20}/></button>
             </div>
+            {addError && (
+              <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 mb-3">
+                {addError}
+              </div>
+            )}
             <form onSubmit={handleAdd} className="space-y-3">
               <div>
                 <label className="text-xs font-semibold text-[#4A5880] mb-1.5 block">Leave Type</label>
                 <select value={form.leave_type}
                   onChange={e => setForm(p => ({ ...p, leave_type: e.target.value }))}
                   className="w-full border border-[#E2E8F4] rounded-xl px-4 py-3 text-sm text-[#4A5880] outline-none bg-[#FAFBFE]">
-                  {LEAVE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                  {LEAVE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">

@@ -24,9 +24,9 @@ const PROP_GRADIENTS = [
   'from-[#064E3B] to-[#0F766E]',
 ]
 
-interface Props { properties: Property[]; agentId: string; userRole: string }
+interface Props { properties: Property[]; agentId: string; userRole: string; companyId: string }
 
-export function PropertiesClient({ properties: initial, agentId, userRole }: Props) {
+export function PropertiesClient({ properties: initial, agentId, userRole, companyId }: Props) {
   const supabase = createClient()
   const router   = useRouter()
   const [props, setProps]   = useState(initial)
@@ -34,6 +34,7 @@ export function PropertiesClient({ properties: initial, agentId, userRole }: Pro
   const [search, setSearch] = useState('')
   const [showAdd, setShowAdd] = useState(false)
   const [saving, setSaving]   = useState(false)
+  const [addError, setAddError] = useState('')
   const [form, setForm] = useState({
     title: '', address: '', city: 'Addis Ababa', price: '',
     price_type: 'sale' as 'sale' | 'rent', status: 'available' as 'available'|'sold'|'rented',
@@ -49,15 +50,33 @@ export function PropertiesClient({ properties: initial, agentId, userRole }: Pro
   })
 
   async function handleAdd(e: React.FormEvent) {
-    e.preventDefault(); setSaving(true)
+    e.preventDefault()
+    setSaving(true)
+    setAddError('')
+
+    if (!companyId) {
+      setAddError('Could not determine your company. Try refreshing the page.')
+      setSaving(false)
+      return
+    }
+
     const { data, error } = await supabase.from('properties').insert({
-      ...form, agent_id: agentId,
+      ...form,
+      agent_id: agentId,
+      company_id: companyId,
       price:     form.price     ? parseFloat(form.price) : null,
       bedrooms:  form.bedrooms  ? parseInt(form.bedrooms) : null,
       bathrooms: form.bathrooms ? parseInt(form.bathrooms) : null,
       area_sqm:  form.area_sqm  ? parseFloat(form.area_sqm) : null,
     }).select().single()
-    if (!error && data) {
+
+    if (error) {
+      setAddError('Could not save: ' + error.message + (error.code ? ' (code ' + error.code + ')' : ''))
+      setSaving(false)
+      return
+    }
+
+    if (data) {
       setProps(prev => [data, ...prev])
       setShowAdd(false)
       setForm({ title:'', address:'', city:'Addis Ababa', price:'', price_type:'sale', status:'available', bedrooms:'', bathrooms:'', area_sqm:'', description:'' })
@@ -144,7 +163,12 @@ export function PropertiesClient({ properties: initial, agentId, userRole }: Pro
           )}
       </div>
 
-      <BottomSheet open={showAdd} onClose={() => setShowAdd(false)} title="Add Property">
+      <BottomSheet open={showAdd} onClose={() => { setShowAdd(false); setAddError('') }} title="Add Property">
+        {addError && (
+          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 mb-3">
+            {addError}
+          </div>
+        )}
         <form onSubmit={handleAdd} className="space-y-3">
           <FormField label="Title" required>
             <input className={inputCls} required value={form.title} onChange={e => setForm(p=>({...p,title:e.target.value}))} placeholder="e.g. Bole Atlas Condo"/>

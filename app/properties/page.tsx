@@ -11,6 +11,7 @@ export default function PropertiesPage() {
   const [properties, setProperties] = useState<any[]>([])
   const [agentId,    setAgentId]    = useState('')
   const [userRole,   setUserRole]   = useState('')
+  const [companyId,  setCompanyId]  = useState('')
   const [loading,    setLoading]    = useState(true)
 
   useEffect(() => {
@@ -21,10 +22,11 @@ export default function PropertiesPage() {
 
       const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, company_id')
         .eq('id', user.id)
         .single()
       setUserRole(profile?.role ?? 'agent')
+      setCompanyId(profile?.company_id ?? '')
 
       const { data } = await supabase
         .from('properties')
@@ -44,7 +46,7 @@ export default function PropertiesPage() {
 
   return (
     <AppLayout title="Properties" subtitle={`${properties.length} listings`}>
-      <PropertiesClient properties={properties} agentId={agentId} userRole={userRole} />
+      <PropertiesClient properties={properties} agentId={agentId} userRole={userRole} companyId={companyId} />
     </AppLayout>
   )
 }

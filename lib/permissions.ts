@@ -80,6 +80,7 @@ export const ALL_NAV_ITEMS = [
     group: 'CRM',
     items: [
       { href: '/leads',      label: 'Leads',      icon: 'Users',           permission: 'crm'        },
+      { href: '/customers',  label: 'Customers',  icon: 'UserCheck',       permission: 'crm'        },
       { href: '/activities', label: 'Activities', icon: 'CalendarDays',    permission: 'activities' },
       { href: '/properties', label: 'Properties', icon: 'Home',            permission: 'properties' },
       { href: '/reports',    label: 'Reports',    icon: 'BarChart2',       permission: 'reports'    },
