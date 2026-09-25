@@ -28,10 +28,11 @@ export default function AttendancePage() {
       const cid = profile?.company_id ?? ''
       setCompanyId(cid)
 
-      const [{ data: emps }, { data: att }] = await Promise.all([
+      const [{ data: emps }, { data: att, error: attErr }] = await Promise.all([
         supabase.from('employees').select('id, full_name').eq('company_id', cid).order('full_name'),
-        supabase.from('attendance').select('*').eq('company_id', cid).order('date', { ascending: false }),
+        supabase.schema('attendance_ops').rpc('get_attendance_report', { p_preset: '30d' }),
       ])
+      if (attErr) console.error('Attendance report error:', attErr.message)
       setEmployees(emps ?? [])
       setRecords(att ?? [])
       setLoading(false)
