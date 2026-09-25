@@ -15,6 +15,16 @@ const STATUS_FILTERS = [
   { key: 'half_day', label: 'Half Day' },
 ]
 
+const DATE_PRESETS: { key: string; label: string }[] = [
+  { key: 'today', label: 'Today' },
+  { key: '7d',    label: '7 Days' },
+  { key: '14d',   label: '14 Days' },
+  { key: '30d',   label: '30 Days' },
+  { key: '90d',   label: '90 Days' },
+  { key: '1y',    label: '1 Year' },
+  { key: 'custom', label: 'Custom' },
+]
+
 const STATUS_BADGE: Record<string, { bg: string; text: string; label: string }> = {
   present:  { bg: '#F0FDF4', text: '#166534', label: 'Present' },
   absent:   { bg: '#FEF2F2', text: '#991B1B', label: 'Absent' },
@@ -38,6 +48,10 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
   const [search,  setSearch]  = useState('')
   const [showAdd, setShowAdd] = useState(false)
   const [saving,  setSaving]  = useState(false)
+  const [preset,  setPreset]  = useState('30d')
+  const [customFrom, setCustomFrom] = useState(getEATDateString())
+  const [customTo,   setCustomTo]   = useState(getEATDateString())
+  const [reportLoading, setReportLoading] = useState(false)
   const [form, setForm] = useState({
     employee_id: employees[0]?.id ?? '',
     date: getEATDateString(),
@@ -46,8 +60,24 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
 
   const empMap = Object.fromEntries(employees.map(e => [e.id, e.full_name]))
 
+  async function loadPreset(nextPreset: string, from?: string, to?: string) {
+    setPreset(nextPreset)
+    setReportLoading(true)
+    const { data, error } = await supabase.schema('attendance_ops').rpc('get_attendance_report', {
+      p_preset: nextPreset,
+      p_custom_from: nextPreset === 'custom' ? (from ?? customFrom) : null,
+      p_custom_to:   nextPreset === 'custom' ? (to ?? customTo) : null,
+    })
+    if (error) {
+      alert('Error loading report: ' + error.message)
+    } else {
+      setRecords(data ?? [])
+    }
+    setReportLoading(false)
+  }
+
   const filtered = records.filter(r => {
-    const name = empMap[r.employee_id] ?? ''
+    const name = r.full_name ?? empMap[r.employee_id] ?? ''
     const matchStatus = filter === 'all' || r.status === filter
     const matchSearch = !search || name.toLowerCase().includes(search.toLowerCase())
     return matchStatus && matchSearch
@@ -74,7 +104,10 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
     }
 
     if (data) {
-      setRecords(prev => [data, ...prev])
+      // Reload through the reporting RPC so the new row comes back joined
+      // with full_name/department/branch_name and its trigger-computed
+      // status, rather than the bare insert result.
+      await loadPreset(preset)
       setShowAdd(false)
       setForm({ employee_id: employees[0]?.id ?? '', date: getEATDateString(), check_in: '', check_out: '', status: 'present', notes: '' })
     }
@@ -85,18 +118,21 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
 
   function handleExportExcel() {
     const rows = filtered.map(r => ({
-      'Employee':   empMap[r.employee_id] ?? 'Unknown',
+      'Employee':   r.full_name ?? empMap[r.employee_id] ?? 'Unknown',
+      'Department': r.department ?? '',
+      'Branch':     r.branch_name ?? '',
       'Date':       r.date,
       'Check In':   r.check_in ? formatEATTime(r.check_in) : '',
       'Check Out':  r.check_out ? formatEATTime(r.check_out) : '',
       'Work Hours': r.work_hours ?? '',
-      'Status':     STATUS_BADGE[r.status]?.label ?? r.status,
+      'Late (min)': r.late_minutes ?? 0,
+      'Status':     r.status_detail ?? STATUS_BADGE[r.status]?.label ?? r.status,
       'Notes':      r.notes ?? '',
     }))
     const ws = XLSX.utils.json_to_sheet(rows)
     ws['!cols'] = [
-      { wch: 22 }, { wch: 12 }, { wch: 12 }, { wch: 12 },
-      { wch: 12 }, { wch: 12 }, { wch: 24 },
+      { wch: 22 }, { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 12 },
+      { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 20 }, { wch: 24 },
     ]
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, 'Attendance')
@@ -119,14 +155,15 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
 
     autoTable(doc, {
       startY: 28,
-      head: [['Employee', 'Date', 'Check In', 'Check Out', 'Work Hours', 'Status', 'Notes']],
+      head: [['Employee', 'Dept', 'Date', 'Check In', 'Check Out', 'Work Hours', 'Status', 'Notes']],
       body: filtered.map(r => [
-        empMap[r.employee_id] ?? 'Unknown',
+        r.full_name ?? empMap[r.employee_id] ?? 'Unknown',
+        r.department ?? '',
         r.date,
         r.check_in ? formatEATTime(r.check_in) : '',
         r.check_out ? formatEATTime(r.check_out) : '',
         r.work_hours ? `${r.work_hours}h` : '',
-        STATUS_BADGE[r.status]?.label ?? r.status,
+        r.status_detail ?? STATUS_BADGE[r.status]?.label ?? r.status,
         r.notes ?? '',
       ]),
       headStyles: { fillColor: [7, 82, 144], textColor: 255, fontStyle: 'bold' },
@@ -166,6 +203,33 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
           </button>
         </div>
 
+        {/* Date range presets */}
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-2 no-scrollbar">
+          {DATE_PRESETS.map(p => (
+            <button key={p.key} onClick={() => loadPreset(p.key)}
+              disabled={reportLoading}
+              className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors disabled:opacity-50 ${
+                preset === p.key
+                  ? 'bg-[#0D1B3E] text-white border-[#0D1B3E]'
+                  : 'bg-white text-[#4A5880] border-[#E2E8F4]'
+              }`}>
+              {p.label}
+            </button>
+          ))}
+          {reportLoading && <Loader2 size={16} className="animate-spin text-[#9AAAC8] flex-shrink-0 self-center"/>}
+        </div>
+
+        {preset === 'custom' && (
+          <div className="flex gap-2 mb-3">
+            <input type="date" value={customFrom} onChange={e => setCustomFrom(e.target.value)}
+              className="flex-1 border border-[#E2E8F4] rounded-xl px-3 py-2 text-sm text-[#0D1B3E] outline-none bg-white" />
+            <input type="date" value={customTo} onChange={e => setCustomTo(e.target.value)}
+              className="flex-1 border border-[#E2E8F4] rounded-xl px-3 py-2 text-sm text-[#0D1B3E] outline-none bg-white" />
+            <button onClick={() => loadPreset('custom', customFrom, customTo)}
+              className="bg-[#075290] text-white rounded-xl px-4 text-xs font-bold">Go</button>
+          </div>
+        )}
+
         <div className="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar">
           {STATUS_FILTERS.map(s => (
             <button key={s.key} onClick={() => setFilter(s.key)}
@@ -201,7 +265,7 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
             </div>
           )}
           {filtered.map((r, i) => {
-            const name  = empMap[r.employee_id] ?? 'Unknown'
+            const name  = r.full_name ?? empMap[r.employee_id] ?? 'Unknown'
             const badge = STATUS_BADGE[r.status] ?? STATUS_BADGE.present
             const ci    = i % BG.length
             return (
@@ -212,15 +276,18 @@ export function AttendanceClient({ records: initial, employees, companyId }: Pro
                   {initials(name)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-[#0D1B3E] truncate">{name}</div>
+                  <div className="text-sm font-semibold text-[#0D1B3E] truncate">
+                    {name}{r.department && <span className="text-[#9AAAC8] font-normal"> · {r.department}</span>}
+                  </div>
                   <div className="text-xs text-[#9AAAC8] truncate mt-0.5">
                     {r.date} · {formatEATTime(r.check_in)} – {formatEATTime(r.check_out)}
-                    {r.work_hours && ` · ${r.work_hours}h`}
+                    {r.work_hours ? ` · ${r.work_hours}h` : ''}
+                    {r.late_minutes > 0 ? ` · ${r.late_minutes}m late` : ''}
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 text-right"
                   style={{ background: badge.bg, color: badge.text }}>
-                  {badge.label}
+                  {r.status_detail ?? badge.label}
                 </span>
               </div>
             )
