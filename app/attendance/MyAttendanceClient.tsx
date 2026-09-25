@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { LogIn, LogOut, Loader2, CheckCircle2, Clock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { getEATDateString, formatEATTime, formatEATFullDate } from '@/lib/timezone'
+import { formatEATTime, formatEATFullDate } from '@/lib/timezone'
 
 interface Props {
   employee: any
@@ -18,14 +18,10 @@ export function MyAttendanceClient({ employee, companyId, today, history, onChan
 
   async function handleCheckIn() {
     setBusy(true)
-    const now = new Date()
-    const { error } = await supabase.from('attendance').insert({
-      company_id:  companyId,
-      employee_id: employee.id,
-      date:        getEATDateString(now),
-      check_in:    now.toISOString(),
-      status:      'present',
-    })
+    // Employees can no longer write to the attendance table directly — this
+    // RPC is the only sanctioned path. It resolves the employee from the
+    // logged-in user itself, so no payload is needed.
+    const { error } = await supabase.schema('attendance_ops').rpc('check_in')
     if (error) alert('Error: ' + error.message)
     setBusy(false)
     onChange()
@@ -34,14 +30,7 @@ export function MyAttendanceClient({ employee, companyId, today, history, onChan
   async function handleCheckOut() {
     if (!today) return
     setBusy(true)
-    const now = new Date()
-
-    // work_hours is a generated column in the database — computed
-    // automatically from check_in/check_out. Do NOT send it here.
-    const { error } = await supabase.from('attendance')
-      .update({ check_out: now.toISOString() })
-      .eq('id', today.id)
-
+    const { error } = await supabase.schema('attendance_ops').rpc('check_out')
     if (error) alert('Error: ' + error.message)
     setBusy(false)
     onChange()
