@@ -1,10 +1,30 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createAdminClient } from '@/lib/supabase/admin'
 
+import { randomInt } from 'crypto'
+
+// Supabase Auth requires at least one lowercase, one uppercase, one digit and
+// one special character. Ambiguous characters (I, O, l, o, 0, 1) are left out
+// so the password is easy to read out or type from a message.
 function generateTempPassword() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'
-  return Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+  const lower   = 'abcdefghijkmnpqrstuvwxyz'
+  const upper   = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+  const digits  = '23456789'
+  const symbols = '!@#$%&*?'
+  const all     = lower + upper + digits + symbols
+
+  const pick = (set: string) => set[randomInt(set.length)]
+
+  // One guaranteed character from each class, then fill to 12 and shuffle.
+  const chars = [pick(lower), pick(upper), pick(digits), pick(symbols)]
+  while (chars.length < 12) chars.push(pick(all))
+
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = randomInt(i + 1)
+    ;[chars[i], chars[j]] = [chars[j], chars[i]]
+  }
+  return chars.join('')
 }
 
 export async function POST(req: NextRequest) {
