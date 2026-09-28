@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { EmployeesClient } from './EmployeesClient'
+import { hasPermission, isFullAccess } from '@/lib/permissions'
 
 export default function EmployeesPage() {
   const supabase = createClient()
@@ -19,6 +20,13 @@ export default function EmployeesPage() {
 
       const { data: profile } = await supabase
         .from('profiles').select('role, company_id').eq('id', user.id).single()
+
+      // Only HR (and full-access roles: CEO / General Manager) may open this
+      // page. Everyone else is sent back to the dashboard, so Add Employee,
+      // Create Login, edit and delete never appear for regular staff.
+      const authorized = isFullAccess(profile?.role) || hasPermission(profile?.role, 'hr')
+      if (!authorized) { router.replace('/dashboard'); return }
+
       setCompanyId(profile?.company_id ?? '')
 
       const { data } = await supabase
