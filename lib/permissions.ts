@@ -93,6 +93,7 @@ export const ALL_NAV_ITEMS = [
     items: [
       { href: '/hr/employees',  label: 'Employees',   icon: 'UserCheck',   permission: 'hr' },
       { href: '/hr/attendance', label: 'Attendance',  icon: 'Clock',       permission: 'hr' },
+      { href: '/hr/documents',  label: 'Documents',   icon: 'FileText',    permission: 'hr' },
       { href: '/hr/leave',      label: 'Leave',       icon: 'CalendarOff', permission: 'always' },
     ]
   },
