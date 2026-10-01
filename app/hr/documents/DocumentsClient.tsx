@@ -1,7 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, Plus, Loader2, X, FileText, Archive, FolderOpen } from 'lucide-react'
+import { Search, Plus, Loader2, X, FileText, Archive, FolderOpen, Camera, Upload } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { FormField, inputCls, selectCls } from '@/components/ui/FormField'
 import { BottomSheet } from '@/components/ui/BottomSheet'
@@ -35,6 +35,8 @@ export function DocumentsClient({ documents: initial, employees, companyId }: Pr
   const [saving, setSaving] = useState(false)
   const [error,  setError]  = useState('')
   const [file,   setFile]   = useState<File | null>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef   = useRef<HTMLInputElement>(null)
   const [form, setForm] = useState({
     title: '', doc_type: DOC_TYPES[0], employee_id: '',
     document_date: '', physical_location: '', notes: '',
@@ -59,6 +61,8 @@ export function DocumentsClient({ documents: initial, employees, companyId }: Pr
     setForm({ title: '', doc_type: DOC_TYPES[0], employee_id: '', document_date: '', physical_location: '', notes: '' })
     setFile(null)
     setError('')
+    if (cameraInputRef.current) cameraInputRef.current.value = ''
+    if (fileInputRef.current)   fileInputRef.current.value = ''
   }
 
   async function handleUpload() {
@@ -79,7 +83,7 @@ export function DocumentsClient({ documents: initial, employees, companyId }: Pr
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    const { error: insertErr } = await supabase.schema('hr_docs').from('documents').insert({
+    const { data: inserted, error: insertErr } = await supabase.schema('hr_docs').from('documents').insert({
       title: form.title,
       doc_type: form.doc_type,
       company_id: companyId,
@@ -93,7 +97,7 @@ export function DocumentsClient({ documents: initial, employees, companyId }: Pr
       file_type: file.type,
       file_size_bytes: file.size,
       created_by: user?.id ?? null,
-    })
+    }).select('id').single()
 
     if (insertErr) {
       // Roll back the orphaned file so storage doesn't accumulate junk.
@@ -105,8 +109,13 @@ export function DocumentsClient({ documents: initial, employees, companyId }: Pr
 
     setShowUpload(false)
     resetForm()
-    await runSearch()
     setSaving(false)
+
+    // Go straight to the new document's page — its QR code is ready there
+    // immediately, so HR can print it and attach it to the physical file
+    // right after registering, without an extra click back into the list.
+    if (inserted?.id) router.push(`/hr/documents/${inserted.id}`)
+    else await runSearch()
   }
 
   return (
@@ -235,10 +244,32 @@ export function DocumentsClient({ documents: initial, employees, companyId }: Pr
           </FormField>
 
           <FormField label="File (PDF or image)" required>
-            <input type="file" accept="application/pdf,image/*"
-              onChange={e => setFile(e.target.files?.[0] ?? null)}
-              className="w-full text-sm text-[#4A5880] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-[#EFF6FF] file:text-[#1D4ED8] file:font-semibold" />
-            {file && <div className="text-[11px] text-[#9AAAC8] mt-1">{file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB</div>}
+            <div className="flex gap-2">
+              <button type="button" onClick={() => cameraInputRef.current?.click()}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#E2E8F4] bg-white text-xs font-semibold text-[#4A5880]">
+                <Camera size={15} /> Take Photo
+              </button>
+              <button type="button" onClick={() => fileInputRef.current?.click()}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#E2E8F4] bg-white text-xs font-semibold text-[#4A5880]">
+                <Upload size={15} /> Choose File
+              </button>
+            </div>
+
+            {/* capture="environment" opens the camera directly on mobile.
+                A separate plain file input covers picking an existing
+                photo or PDF from storage — combining both behaviors into
+                one <input> isn't reliable across browsers. */}
+            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment"
+              onChange={e => setFile(e.target.files?.[0] ?? null)} className="hidden" />
+            <input ref={fileInputRef} type="file" accept="application/pdf,image/*"
+              onChange={e => setFile(e.target.files?.[0] ?? null)} className="hidden" />
+
+            {file && (
+              <div className="text-[11px] text-[#9AAAC8] mt-2 flex items-center justify-between">
+                <span>{file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                <button type="button" onClick={() => setFile(null)} className="text-red-500 font-semibold">Remove</button>
+              </div>
+            )}
           </FormField>
 
           <button onClick={handleUpload} disabled={saving}
