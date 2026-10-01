@@ -5,7 +5,7 @@ import {
   Home, BarChart2, Download, ShieldCheck, LogOut,
   UserCheck, Clock, CalendarOff, Wallet,
   TrendingUp, TrendingDown, BadgeDollarSign, Settings,
-  ChevronDown, FileText
+  ChevronDown, FileText, Menu, X as CloseIcon
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { SanchosLogoSmall } from '@/components/ui/SanchosLogo'
@@ -37,6 +37,7 @@ export function AppLayout({ children, title, subtitle }: Props) {
   const [role,    setRole]    = useState<string>('agent')
   const [profile, setProfile] = useState<any>(null)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     async function loadRole() {
@@ -190,6 +191,12 @@ export function AppLayout({ children, title, subtitle }: Props) {
         {/* Mobile top bar */}
         <header className="md:hidden px-4 py-3 flex items-center justify-between flex-shrink-0"
           style={{ background: 'rgba(13,21,38,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(59,130,246,0.12)' }}>
+          <button onClick={() => setMobileMenuOpen(true)}
+            className="rounded-xl p-2 text-white"
+            style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+            aria-label="Open menu">
+            <Menu size={18}/>
+          </button>
           <SanchosLogoSmall />
           <button onClick={handleLogout}
             className="rounded-xl px-3 py-1.5 text-white text-xs font-semibold flex items-center gap-1.5"
@@ -197,6 +204,69 @@ export function AppLayout({ children, title, subtitle }: Props) {
             <LogOut size={13}/> Logout
           </button>
         </header>
+
+        {/* Mobile full-menu drawer — reaches every page the bottom nav's
+            fixed 4 shortcuts don't (HR: Attendance, Employees, Documents,
+            Leave; Finance; System), scoped by role the same as desktop. */}
+        {mobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 z-50 flex">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+            <div className="relative w-72 max-w-[80%] h-full overflow-y-auto"
+              style={{ background: 'linear-gradient(180deg, #0D1526 0%, #0A0E1A 100%)' }}>
+              <div className="flex items-center justify-between px-4 py-4"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <SanchosLogoSmall />
+                <button onClick={() => setMobileMenuOpen(false)} className="text-white/60 p-1" aria-label="Close menu">
+                  <CloseIcon size={20}/>
+                </button>
+              </div>
+              {profile && (
+                <div className="px-4 py-3 flex items-center gap-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-xs font-bold flex-shrink-0 overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' }}>
+                    {profile.avatar_url
+                      ? <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+                      : profile.full_name?.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-white text-sm font-semibold truncate">{profile.full_name}</div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 inline-block"
+                      style={{ background: 'rgba(59,130,246,0.15)', color: '#60A5FA' }}>
+                      {ROLE_LABELS[role] ?? role}
+                    </span>
+                  </div>
+                </div>
+              )}
+              <nav className="px-3 py-3 space-y-1">
+                {navGroups.map(group => (
+                  <div key={group.group} className="mb-1">
+                    {GROUP_LABELS[group.group] && (
+                      <div className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-white/25">
+                        {GROUP_LABELS[group.group]}
+                      </div>
+                    )}
+                    {group.items.map(item => {
+                      const Icon   = ICON_MAP[item.icon] ?? LayoutDashboard
+                      const active = isActive(item.href)
+                      return (
+                        <button key={item.href}
+                          onClick={() => { setMobileMenuOpen(false); router.push(item.href) }}
+                          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium text-left"
+                          style={active ? {
+                            background: 'linear-gradient(90deg, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.05) 100%)',
+                            color: '#FFFFFF',
+                          } : { color: 'rgba(255,255,255,0.65)' }}>
+                          <Icon size={18} strokeWidth={active ? 2.2 : 1.8} style={active ? { color: '#60A5FA' } : undefined} />
+                          {item.label}
+                        </button>
+                      )
+                    })}
+                  </div>
+                ))}
+              </nav>
+            </div>
+          </div>
+        )}
 
         {/* Page content */}
         <main className="flex-1 overflow-auto" style={{ background: '#0A0E1A' }}>
