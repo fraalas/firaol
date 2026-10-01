@@ -5,7 +5,7 @@ import {
   Home, BarChart2, Download, ShieldCheck, LogOut,
   UserCheck, Clock, CalendarOff, Wallet,
   TrendingUp, TrendingDown, BadgeDollarSign, Settings,
-  ChevronDown
+  ChevronDown, FileText
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { SanchosLogoSmall } from '@/components/ui/SanchosLogo'
@@ -17,6 +17,7 @@ const ICON_MAP: Record<string, any> = {
   Home, BarChart2, Download, ShieldCheck,
   UserCheck, Clock, CalendarOff, Wallet,
   TrendingUp, TrendingDown, BadgeDollarSign, Settings,
+  FileText,
 }
 
 const GROUP_LABELS: Record<string, string> = {
