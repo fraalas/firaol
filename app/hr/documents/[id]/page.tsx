@@ -10,25 +10,15 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { hasPermission, isFullAccess } from '@/lib/permissions'
 import { formatDate, formatDateTime } from '@/lib/utils'
 
-// Loaded at runtime from a CDN rather than bundled as an npm dependency, so
-// this doesn't require a package.json/lockfile change to ship.
-const QRCODE_CDN = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js'
-
-function loadQrCodeLib(): Promise<any> {
-  return new Promise((resolve, reject) => {
-    if ((window as any).QRCode) return resolve((window as any).QRCode)
-    const existing = document.getElementById('qrcode-cdn-script')
-    if (existing) {
-      existing.addEventListener('load', () => resolve((window as any).QRCode))
-      return
-    }
-    const script = document.createElement('script')
-    script.id = 'qrcode-cdn-script'
-    script.src = QRCODE_CDN
-    script.onload = () => resolve((window as any).QRCode)
-    script.onerror = reject
-    document.head.appendChild(script)
-  })
+// Rendered as a plain <img> via a public QR-image service rather than any
+// client-side JS library — both the CDN-script and the bundled-npm-package
+// approaches failed silently in some mobile/in-app browsers (e.g. Telegram's
+// built-in browser) with no error visible to the end user. A plain image
+// request behaves the same way everywhere, same as any other photo in the
+// app. Only the document's URL (a UUID path, no personal data) is sent to
+// generate the image.
+function qrImageUrl(documentUrl: string) {
+  return `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=${encodeURIComponent(documentUrl)}`
 }
 
 export default function DocumentDetailPage() {
@@ -41,7 +31,8 @@ export default function DocumentDetailPage() {
   const [doc, setDoc] = useState<any>(null)
   const [history, setHistory] = useState<any[]>([])
   const [previewUrl, setPreviewUrl] = useState('')
-  const [qrDataUrl, setQrDataUrl] = useState('')
+  const [qrLoaded, setQrLoaded] = useState(false)
+  const [qrFailed, setQrFailed] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const loggedView = useRef(false)
@@ -80,21 +71,12 @@ export default function DocumentDetailPage() {
       }
 
       setLoading(false)
-
-      // Generate the QR after the rest of the page is up — it's the least
-      // urgent piece and shouldn't block the preview from showing.
-      try {
-        const QRCode = await loadQrCodeLib()
-        const url = `${window.location.origin}/hr/documents/${id}`
-        const png = await QRCode.toDataURL(url, { width: 240, margin: 1 })
-        setQrDataUrl(png)
-        await supabase.schema('hr_docs').rpc('log_event', { p_document_id: id, p_action: 'qr_generated' })
-      } catch {
-        // Non-fatal — the rest of the page still works without a QR image.
-      }
+      await supabase.schema('hr_docs').rpc('log_event', { p_document_id: id, p_action: 'qr_generated' })
     }
     load()
   }, [id])
+
+  const documentUrl = typeof window !== 'undefined' ? `${window.location.origin}/hr/documents/${id}` : ''
 
   async function handleDownload() {
     if (!doc || !previewUrl) return
@@ -126,12 +108,26 @@ export default function DocumentDetailPage() {
     setBusy(false)
   }
 
-  function downloadQr() {
-    if (!qrDataUrl || !doc) return
-    const a = document.createElement('a')
-    a.href = qrDataUrl
-    a.download = `${doc.document_code}-qr.png`
-    a.click()
+  async function downloadQr() {
+    if (!doc || !documentUrl) return
+    try {
+      // Fetch as a blob so the browser saves it as a file rather than
+      // navigating to the image — works regardless of this being a
+      // cross-origin image URL.
+      const res = await fetch(qrImageUrl(documentUrl))
+      const blob = await res.blob()
+      const blobUrl = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = blobUrl
+      a.download = `${doc.document_code}-qr.png`
+      a.click()
+      URL.revokeObjectURL(blobUrl)
+    } catch {
+      // Fallback for browsers that block the fetch (e.g. some in-app
+      // browsers): open the image directly so the user can long-press
+      // and save it manually.
+      window.open(qrImageUrl(documentUrl), '_blank')
+    }
   }
 
   if (loading) return (
@@ -214,16 +210,21 @@ export default function DocumentDetailPage() {
         {/* QR code */}
         <div className="bg-white rounded-2xl border border-[#E2E8F4] p-4 flex items-center gap-4">
           <div className="w-24 h-24 rounded-xl bg-[#F5F7FB] flex items-center justify-center flex-shrink-0 overflow-hidden">
-            {qrDataUrl
-              ? <img src={qrDataUrl} alt="Document QR code" className="w-full h-full" />
-              : <QrCode size={28} className="text-[#9AAAC8]" />}
+            {documentUrl && !qrFailed ? (
+              <img src={qrImageUrl(documentUrl)} alt="Document QR code" className="w-full h-full"
+                onLoad={() => setQrLoaded(true)} onError={() => setQrFailed(true)} />
+            ) : (
+              <QrCode size={28} className="text-[#9AAAC8]" />
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold text-[#0D1B3E]">Document QR Code</div>
             <div className="text-xs text-[#9AAAC8] mt-0.5">
-              Scanning it opens this page, still protected by the same permission checks.
+              {qrFailed
+                ? 'Could not load the QR image — check your connection and reopen this page.'
+                : 'Scanning it opens this page, still protected by the same permission checks.'}
             </div>
-            {qrDataUrl && (
+            {qrLoaded && !qrFailed && (
               <button onClick={downloadQr} className="text-xs font-bold text-[#075290] mt-2">
                 Download QR
               </button>
